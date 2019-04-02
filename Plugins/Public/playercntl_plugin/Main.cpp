@@ -1053,7 +1053,11 @@ USERCMD UserCmds[] =
 	{ L"/net",			SystemSensor::UserCmd_Net, L"Usage: /net [all|jumponly|off]"},
 	{ L"/maketag",		Rename::UserCmd_MakeTag, L"Usage: /maketag <tag> <master password> <description>"},
 	{ L"/droptag",		Rename::UserCmd_DropTag, L"Usage: /droptag <tag> <master password>"},
-	{ L"/settagpass",	Rename::UserCmd_SetTagPass, L"Usage: /settagpass <tag> <master password> <rename password>"}
+	{ L"/settagpass",	Rename::UserCmd_SetTagPass, L"Usage: /settagpass <tag> <master password> <rename password>"},
+
+	// universe talk (ben, 2019/4/2)
+	{ L"/u",			Message::UserCmd_UnivMsg, L"Usage: /universe <message> or /u ...>" },
+	{ L"/universe",		Message::UserCmd_UnivMsg, L"Usage: /universe <message> or /u ...>" }
 };
 
 /**

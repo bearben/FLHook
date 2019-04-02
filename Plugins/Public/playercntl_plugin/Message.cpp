@@ -111,7 +111,7 @@ void SendLocalSystemChat(uint iFromClientID, const wstring &wscText)
                         continue;
 
                 // Send the message a player in this system.
-                FormatSendChat(iClientID, wscSender, wscText, L"FF8F40");
+                FormatSendChat(iClientID, wscSender, wscText, L"FF8F40", L"");
         }
 }
 
@@ -130,8 +130,8 @@ void SendPrivateChat(uint iFromClientID, uint iToClientID, const wstring &wscTex
         }
 
         // Send the message to both the sender and receiver.
-        FormatSendChat(iToClientID, wscSender, wscText, L"19BD3A");
-        FormatSendChat(iFromClientID, wscSender, wscText, L"19BD3A");
+        FormatSendChat(iToClientID, wscSender, wscText, L"19BD3A", L"");
+        FormatSendChat(iFromClientID, wscSender, wscText, L"19BD3A", L"");
         //Alleymarker02
 
         wstring wscCharnameSender = (const wchar_t*)Players.GetActiveCharacterName(iFromClientID);
@@ -169,9 +169,25 @@ void SendSystemChat(uint iFromClientID, const wstring &wscText)
                 if (iSystemID == iClientSystemID)
                 {
                         // Send the message a player in this system.
-                        FormatSendChat(iClientID, wscSender, wscText, L"E6C684");
+                        FormatSendChat(iClientID, wscSender, wscText, L"E6C684", L"[星系]");
                 }
         }
+}
+
+/** Universe Talk by Ben 2019/4/2
+	Send a player to universe message */
+void SendUniverseChat(uint iFromClientID, const wstring &wscText)
+{
+	wstring wscSender = (const wchar_t*)Players.GetActiveCharacterName(iFromClientID);
+
+	// For all players online
+	struct PlayerData *pPD = 0;
+	while (pPD = Players.traverse_active(pPD))
+	{
+		uint iClientID = HkGetClientIdFromPD(pPD);
+		// Send the message a player in this system.
+		FormatSendChat(iClientID, wscSender, wscText, L"055DFF", L"[宇宙]");
+	}
 }
 
 namespace Message
@@ -965,6 +981,25 @@ namespace Message
 		return true;
 	}
 
+	/** Universe Talk by Ben 2019/4/2
+		Send a message to universe chat. */
+	bool Message::UserCmd_UnivMsg(uint iClientID, const wstring &wscCmd, const wstring &wscParam, const wchar_t *usage)
+	{
+		wstring wscSender = (const wchar_t*)Players.GetActiveCharacterName(iClientID);
+		wstring wscMsg = GetParamToEnd(wscParam, ' ', 0);
+
+		if (wscMsg.size() == 0)
+		{
+			PrintUserCmdText(iClientID, L"ERR Invalid parameters");
+			PrintUserCmdText(iClientID, usage);
+			return true;
+		}
+
+		SendUniverseChat(iClientID, wscMsg);
+		SendChatEvent(iClientID, 0x00010000, wscMsg);
+		return true;
+	}
+
 	/** Send an message to the last person that PM'd this client. */
 	bool Message::UserCmd_ReplyToLastPMSender(uint iClientID, const wstring &wscCmd, const wstring &wscParam, const wchar_t *usage)
 	{
@@ -1173,11 +1208,11 @@ namespace Message
 			if (iter->iClientID==iClientID)
 				bSenderReceived=true;
 
-			FormatSendChat(iter->iClientID, wscSender, wscMsg, L"00CCFF");
+			FormatSendChat(iter->iClientID, wscSender, wscMsg, L"00CCFF", L"[势力]");
 			bMsgSent=true;
 		}
 		if (!bSenderReceived)
-			FormatSendChat(iClientID, wscSender, wscMsg, L"00CCFF");
+			FormatSendChat(iClientID, wscSender, wscMsg, L"00CCFF", L"[势力]");
 
 		if (bMsgSent==false)
 			PrintUserCmdText(iClientID, L"ERR No chars found");
@@ -1457,6 +1492,7 @@ namespace Message
 			{
 				if (!(wscCmd==L"/l" || wscCmd==L"/local"
 					|| wscCmd==L"/s" || wscCmd==L"/system"
+					|| wscCmd == L"/u" || wscCmd == L"/universe"	//added by Ben 2019/4/2
 					|| wscCmd==L"/g" || wscCmd==L"/group"
 					|| wscCmd==L"/t" || wscCmd==L"/target"
 					|| wscCmd==L"/r" || wscCmd==L"/reply"

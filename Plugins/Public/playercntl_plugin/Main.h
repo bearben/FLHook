@@ -227,6 +227,7 @@ namespace Message
 	bool UserCmd_LoadCoords(uint iClientID, const wstring &wscCmd, const wstring &wscParam, const wchar_t *usage);
 	bool UserCmd_SetMsg(uint iClientID, const wstring &wscCmd, const wstring &wscParam, const wchar_t *usage);
 	bool UserCmd_ShowMsgs(uint iClientID, const wstring &wscCmd, const wstring &wscParam, const wchar_t *usage);
+	bool UserCmd_UnivMsg(uint iClientID, const wstring &wscCmd, const wstring &wscParam, const wchar_t *usage);	// added by Ben 2019/4/2
 	bool UserCmd_SystemMsg(uint iClientID, const wstring &wscCmd, const wstring &wscParam, const wchar_t *usage);
 	bool UserCmd_SMsg(uint iClientID, const wstring &wscCmd, const wstring &wscParam, const wchar_t *usage);
 	bool UserCmd_DRMsg(uint iClientID, const wstring &wscCmd, const wstring &wscParam, const wchar_t *usage);

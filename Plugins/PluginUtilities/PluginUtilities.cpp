@@ -888,8 +888,9 @@ Quaternion HkMatrixToQuaternion(Matrix m)
 
 // Format a chat string in accordance with the receiver's preferences and send it. Will
 // check that the receiver accepts messages from wscSender and refuses to send if necessary.
+// mod by Ben 2019/4/2
 void FormatSendChat(uint iToClientID, const wstring &wscSender, const wstring &wscText, 
-		const wstring &wscTextColor)
+		const wstring &wscTextColor, const wstring &wscPrefix)
 {
 	if (set_bUserCmdIgnore)
 	{
@@ -925,7 +926,9 @@ void FormatSendChat(uint iToClientID, const wstring &wscSender, const wstring &w
 	wstring wscTRADataFormat = wszFormatBuf;
 	const wstring wscTRADataSenderColor = L"FFFFFF"; // white
 
-	wstring wscXML = L"<TRA data=\"0x" + wscTRADataSenderColor + wscTRADataFormat + 
+	wstring wscXML = L"<TRA data=\"0x" + wscTextColor + wscTRADataFormat +
+		L"\" mask=\"-1\"/><TEXT>" + XMLText(wscPrefix) + L"</TEXT>" +
+		L"<TRA data=\"0x" + wscTRADataSenderColor + wscTRADataFormat +
 		L"\" mask=\"-1\"/><TEXT>" + XMLText(wscSender) + L": </TEXT>" +
 		L"<TRA data=\"0x" + wscTextColor + wscTRADataFormat + 
 		L"\" mask=\"-1\"/><TEXT>" + XMLText(wscText) + L"</TEXT>";
@@ -1008,7 +1011,7 @@ void SendGroupChat(uint iFromClientID, const wstring &wscText)
 	HkGetGroupMembers(wscSender, lstMembers);
 	foreach(lstMembers, GROUP_MEMBER, g)
 	{
-		FormatSendChat(g->iClientID, wscSender, wscText, L"FF7BFF");
+		FormatSendChat(g->iClientID, wscSender, wscText, L"FF7BFF", L"");
 	}
 }
 
