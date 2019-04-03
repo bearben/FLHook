@@ -94,6 +94,13 @@ namespace MiscCmds
 	bool UserCmd_Shields(uint iClientID, const wstring &wscCmd, const wstring &wscParam, const wchar_t *usage);
 	bool UserCmd_Screenshot(uint iClientID, const wstring &wscCmd, const wstring &wscParam, const wchar_t *usage);
 
+	// smart tractor 2019/4/3
+	void LoadSmartTractorSettings();
+	bool UserCmd_SmartTractor(uint iClientID, const wstring &wscCmd, const wstring &wscParam, const wchar_t *usage);
+	bool SmartTractor_On(uint iClientID);
+	bool SmartTractor_Silent(uint iClientID);
+	bool Check_in_List(uint GoodID);
+
 	void AdminCmd_SmiteAll(CCmds* cmds);
 	void AdminCmd_Bob(CCmds* cmds, const wstring &wscCharname);
 	void AdminCmd_PlayMusic(CCmds* cmds, const wstring &wscMusicname);

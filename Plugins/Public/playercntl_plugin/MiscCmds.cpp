@@ -28,7 +28,7 @@ namespace MiscCmds
 {
 	struct INFO
 	{
-		INFO() : bLightsOn(false), bShieldsDown(false), bSelfDestruct(false)
+		INFO() : bLightsOn(false), bShieldsDown(false), bSelfDestruct(false), bSmartTractor(false), bSmartTractorSilent(false)
 		{}
 
 		/// Lights on/off
@@ -39,6 +39,10 @@ namespace MiscCmds
 
 		/// Self destruct
 		bool bSelfDestruct;
+
+		// smart tractor by Ben 2019/4/3
+		bool bSmartTractor;
+		bool bSmartTractorSilent;
 	};
 
 	/** An enum list for each mathamatical operation usable for the dice command */
@@ -67,6 +71,9 @@ namespace MiscCmds
 	/// Local chat range
 	float set_iLocalChatRange = 9999;
 
+	// smart tractor commodity list
+	map<unsigned, bool> smarttractorlist;
+
 	/// Load the configuration
 	void MiscCmds::LoadSettings(const string &scPluginCfgFile)
 	{
@@ -79,6 +86,41 @@ namespace MiscCmds
 		set_wscCoinMsg = stows(IniGetS(scPluginCfgFile, "General", "CoinMsg", "%player tossed %result"));
 
 		set_iSmiteMusicID = CreateID(IniGetS(scPluginCfgFile, "General", "SmiteMusic", "music_danger").c_str());
+	}
+
+	// smart tractor 2019/4/3
+	void MiscCmds::LoadSmartTractorSettings()
+	{
+		int iLoadedCommodities = 0;
+		smarttractorlist.clear();
+
+		// The path to the configuration file.
+		char szCurDir[MAX_PATH];
+		GetCurrentDirectory(sizeof(szCurDir), szCurDir);
+		string scPluginCfgFile = string(szCurDir) + "\\flhook_plugins\\smart_tractor.cfg";
+
+		// Load generic settings
+		//set_iPluginDebug = IniGetI(scPluginCfgFile, "General", "debug", 0);
+
+		INI_Reader ini;
+		if (ini.open(scPluginCfgFile.c_str(), false))
+		{
+			while (ini.read_header())
+			{
+				if (ini.is_header("TractList"))
+				{
+					while (ini.read_value())
+					{
+						//ConPrint(L"%s\n", stows(ini.get_name_ptr()));
+						smarttractorlist[CreateID(ini.get_name_ptr())] = true;
+						iLoadedCommodities++;
+					}
+				}
+			}
+			ini.close();
+		}
+
+		ConPrint(L"SmartTractor: %u items loaded.\n", iLoadedCommodities);
 	}
 
 	/** Clean up when a client disconnects */
@@ -230,7 +272,8 @@ namespace MiscCmds
 	Roll dice for everyone within 6km of a vessel. Supports 1d20 formatting.
 	*/
 	bool MiscCmds::UserCmd_Dice(uint iFromClientID, const wstring &wscCmd, const wstring &wscParam, const wchar_t *usage)
-	{
+	{
+
 		boost::wregex expr(L"(\\d{1,2})[Dd](\\d{1,3})(([+\\-*])?(\\d{1,5}))?");
 		boost::wsmatch sm;
 
@@ -317,8 +360,10 @@ namespace MiscCmds
 			PrintUserCmdText(iFromClientID, L"Examples: /roll 1d20 -- Roll 1, 20 sided die");
 			PrintUserCmdText(iFromClientID, L"          /roll 1d8+4 -- Roll 1, 8 sided die and add 8");
 			PrintUserCmdText(iFromClientID, L"          /roll 4d20+2 -- Roll 4, 20 sided dice, adding 2 to each die rolled");
-		}
-		return true;
+		}
+
+		return true;
+
 	}
 
 	/** Throw the dice and tell all players within 6 km */
@@ -521,6 +566,63 @@ namespace MiscCmds
 		mapInfo[iClientID].bShieldsDown = !mapInfo[iClientID].bShieldsDown;
 		PrintUserCmdText(iClientID, L"Shields %s", mapInfo[iClientID].bShieldsDown ? L"Disabled":L"Enabled");
 		return true;
+	}
+
+	bool MiscCmds::UserCmd_SmartTractor(uint iClientID, const wstring &wscCmd, const wstring &wscParam, const wchar_t *usage)
+	{
+		wstring wscMode = ToLower(GetParam(wscParam, ' ', 0));
+		if (wscMode.size() == 0)
+		{
+			PrintUserCmdText(iClientID, L"[智能拾取] 指令参数输入错误");
+			PrintUserCmdText(iClientID, usage);
+			return true;
+		}
+
+		if (wscMode == L"on")
+		{
+			PrintUserCmdText(iClientID, L"[智能拾取] 开启 (牵引光束只会牵引高价值物品，但也会摧毁其他物品）");
+			PrintUserCmdText(iClientID, L"[智能拾取] 如需关闭拾取提示，请使用\"/tract silent\"");
+			mapInfo[iClientID].bSmartTractor = true;
+			mapInfo[iClientID].bSmartTractorSilent = false;
+		}
+		else if (wscMode == L"silent")
+		{
+			PrintUserCmdText(iClientID, L"[智能拾取] 开启 (牵引光束只会牵引高价值物品，但也会摧毁其他物品）");
+			PrintUserCmdText(iClientID, L"[智能拾取] 安静模式");
+			mapInfo[iClientID].bSmartTractor = true;
+			mapInfo[iClientID].bSmartTractorSilent = true;
+		}
+		else if (wscMode == L"off")
+		{
+			PrintUserCmdText(iClientID, L"[智能拾取] 关闭");
+			mapInfo[iClientID].bSmartTractor = false;
+			mapInfo[iClientID].bSmartTractorSilent = false;
+		}
+		else
+		{
+			PrintUserCmdText(iClientID, L"[智能拾取] 指令参数输入错误");
+			PrintUserCmdText(iClientID, usage);
+		}
+		return true;
+	}
+
+	bool MiscCmds::SmartTractor_On(uint iClientID)
+	{
+		return mapInfo[iClientID].bSmartTractor;
+	}
+
+	bool MiscCmds::SmartTractor_Silent(uint iClientID)
+	{
+		return mapInfo[iClientID].bSmartTractorSilent;
+	}
+
+	bool MiscCmds::Check_in_List(uint GoodID)
+	{
+		map<unsigned, bool>::iterator iter = smarttractorlist.find(GoodID);
+		if (iter != smarttractorlist.end())	
+			return true;
+		else 
+			return false;
 	}
 
 	void AdminCmd_PlayMusic(CCmds* cmds, const wstring &wscMusicname)

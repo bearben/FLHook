@@ -104,11 +104,12 @@ void LoadSettings()
 
 void HelpInfo(uint iClientID)
 {
-	PrintUserCmdText(iClientID, L"Below is a list of all possible helpmenu commands, but there is also /rules and /start for some basic information for new players.");
-	PrintUserCmdText(iClientID, L"The current help commands available are as follows:");
+	PrintUserCmdText(iClientID, L"帮助菜单的所有指令如下:");
+	PrintUserCmdText(iClientID, L"/rules");
+	PrintUserCmdText(iClientID, L"/start");
 	for (map<wstring, HELPSTRUCT>::iterator iter = mapHelp.begin(); iter != mapHelp.end(); iter++)
 	{
-		PrintUserCmdText(iClientID, L"helpmenu %s", iter->first.c_str());
+		PrintUserCmdText(iClientID, L"/helpmenu %s", iter->first.c_str());
 	}
 }
 
@@ -116,14 +117,14 @@ bool ValidityCheck(uint iClientID)
 {
 	if (!bPluginEnabled) // Make sure that the plugin isn't disabled via the cfg
 	{
-		PrintUserCmdText(iClientID, L"The extended help menu is currently disabled.");
+		PrintUserCmdText(iClientID, L"扩展帮助菜单已被关闭");
 		return false;
 	}
 
 	// Stops people locking themselves out by using the command when dead.
 	if (HkIsOnDeathMenu(iClientID))
 	{
-		PrintUserCmdText(iClientID, L"ERR: You must be alive to use this command."); // Dummy msg
+		PrintUserCmdText(iClientID, L"错误：不能在死亡时使用此指令"); // Dummy msg
 		return false;
 	}
 	return true;
@@ -174,7 +175,7 @@ bool UserCmd_Rules(uint iClientID, const wstring &wscCmd, const wstring &wscPara
 	if (!ValidityCheck(iClientID))
 		return false;
 
-	RulesOrStarted(iClientID, L"Discovery RP 24/7 Server Rules", 501446);
+	RulesOrStarted(iClientID, L"Discovery Freelancer 搞事服 24/7 服务器规则", 501446);
 	return true;
 }
 
@@ -183,7 +184,7 @@ bool UserCmd_GettingStarted(uint iClientID, const wstring &wscCmd, const wstring
 	if (!ValidityCheck(iClientID))
 		return false;
 
-	RulesOrStarted(iClientID, L"Getting Started", 500709);
+	RulesOrStarted(iClientID, L"新手帮助", 500709);
 	return true;
 }
 

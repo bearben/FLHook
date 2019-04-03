@@ -139,6 +139,9 @@ void LoadSettings()
 	SystemSensor::LoadSettings(scPluginCfgFile);
 	CrashCatcher::Init();
 	Rename::ReloadLockedShips();
+
+	// smart tractor 2019/4/3
+	MiscCmds::LoadSmartTractorSettings();
 }
 
 /** Clean up when a client disconnects */
@@ -761,6 +764,37 @@ namespace HkIServerImpl
 		}
 	}
 
+	// added by Ben 2019/4/3
+	// smart tractor
+	void __stdcall TractorObjects(unsigned int iClientID, struct XTractorObjects const &objs)
+	{
+		if (!MiscCmds::SmartTractor_On(iClientID))
+		{	
+			// smart tractor offline
+			return;
+		}
+
+		for (int *elem = objs.pArraySpaceID; elem != objs.pArraySpaceIDEnd; elem++)
+		{
+			int sID = *elem;
+			unsigned GoodID = 0;
+			pub::SpaceObj::GetGoodID(sID, GoodID);
+			
+			const GoodInfo *gi = GoodList::find_by_id(GoodID);
+
+			if (MiscCmds::Check_in_List(GoodID)) {
+				// in list
+				if (!MiscCmds::SmartTractor_Silent(iClientID))
+					PrintUserCmdText(iClientID, L"[智能拾取] 拾取了 %s", HkGetWStringFromIDS(gi->iIDSName).c_str());
+			} else {
+				// not in list, destroy it
+				if (!MiscCmds::SmartTractor_Silent(iClientID))
+					PrintUserCmdText(iClientID, L"[智能拾取] 销毁了 %s (不在智能拾取列表中）", HkGetWStringFromIDS(gi->iIDSName).c_str());
+				pub::SpaceObj::Destroy(sID, DestroyType::VANISH);
+			}
+		}
+	}
+
 	map<uint, mstime> mapSaveTimes;
 
 	void Timer()
@@ -778,8 +812,8 @@ namespace HkIServerImpl
 		}
 	}
 
-	// Save after a tractor to prevent cargo duplication loss on crash
-	void __stdcall TractorObjects(unsigned int iClientID, struct XTractorObjects const &objs)
+	// Save after a tractor to prevent cargo duplication loss on crash	2019/4/3
+	void __stdcall TractorObjects_AFTER(unsigned int iClientID, struct XTractorObjects const &objs)
 	{
 		returncode = DEFAULT_RETURNCODE;
 		if (mapSaveTimes[iClientID]==0)
@@ -795,6 +829,8 @@ namespace HkIServerImpl
 		{
 			mapSaveTimes[iClientID] = GetTimeInMS() + 60000;
 		}
+
+		PrintUserCmdText(iClientID, L"[智能拾取] 丢弃了 %d 单位货物（如只拾取高价值物品，可以输入指令\"/tract on\"）", objs.iCount);
 	}
 
 	void __stdcall SetTarget(uint uClientID, struct XSetTarget const &p2)
@@ -1057,7 +1093,10 @@ USERCMD UserCmds[] =
 
 	// universe talk (ben, 2019/4/2)
 	{ L"/u",			Message::UserCmd_UnivMsg, L"Usage: /universe <message> or /u ...>" },
-	{ L"/universe",		Message::UserCmd_UnivMsg, L"Usage: /universe <message> or /u ...>" }
+	{ L"/universe",		Message::UserCmd_UnivMsg, L"Usage: /universe <message> or /u ...>" },
+
+	// smart tractor (ben, 2019/4/3)
+	{ L"/tract",		MiscCmds::UserCmd_SmartTractor, L"使用方法：/tract [on|silent|off]" },
 };
 
 /**
@@ -1607,7 +1646,8 @@ EXPORT PLUGIN_INFO* Get_PluginInfo()
 	p_PI->lstHooks.push_back(PLUGIN_HOOKINFO((FARPROC*)&HkIServerImpl::ReqEquipment, PLUGIN_HkIServerImpl_ReqEquipment, 0));
 	p_PI->lstHooks.push_back(PLUGIN_HOOKINFO((FARPROC*)&HkIServerImpl::ReqHullStatus, PLUGIN_HkIServerImpl_ReqHullStatus, 0));
 	p_PI->lstHooks.push_back(PLUGIN_HOOKINFO((FARPROC*)&HkIServerImpl::ReqShipArch, PLUGIN_HkIServerImpl_ReqShipArch, 0));
-	p_PI->lstHooks.push_back(PLUGIN_HOOKINFO((FARPROC*)&HkIServerImpl::TractorObjects, PLUGIN_HkIServerImpl_TractorObjects_AFTER, 0));
+	p_PI->lstHooks.push_back(PLUGIN_HOOKINFO((FARPROC*)&HkIServerImpl::TractorObjects, PLUGIN_HkIServerImpl_TractorObjects, 0));
+	p_PI->lstHooks.push_back(PLUGIN_HOOKINFO((FARPROC*)&HkIServerImpl::TractorObjects_AFTER, PLUGIN_HkIServerImpl_TractorObjects_AFTER, 0));
 	p_PI->lstHooks.push_back(PLUGIN_HOOKINFO((FARPROC*)&HkIServerImpl::JettisonCargo, PLUGIN_HkIServerImpl_JettisonCargo_AFTER, 0));
 	p_PI->lstHooks.push_back(PLUGIN_HOOKINFO((FARPROC*)&HkIServerImpl::SetTarget, PLUGIN_HkIServerImpl_SetTarget, 0));
 	p_PI->lstHooks.push_back(PLUGIN_HOOKINFO((FARPROC*)&HkIServerImpl::CharacterInfoReq, PLUGIN_HkIServerImpl_CharacterInfoReq, 0));
