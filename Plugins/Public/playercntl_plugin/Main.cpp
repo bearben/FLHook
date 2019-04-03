@@ -234,9 +234,9 @@ static bool IsDockingAllowed(uint iShip, uint iDockTarget, uint iClientID)
 	{
 		pub::Player::SendNNMessage(iClientID, pub::GetNicknameId("info_access_denied"));
 		wstring wscMsg[3] = {
-			L"Access Denied! Request to dock denied. We don't want your kind around here.",
-			L"Access Denied! Docking request rejected. Your papers are no good.",
-			L"Access Denied! You can't dock here. Your reputation stinks."
+			L"停靠请求被拒绝！我们不欢迎你来这里。",
+			L"停靠请求被拒绝！你在我们这里的记录不好。",
+			L"停靠请求被拒绝！你在我们这里的名声很糟糕。"
 		};
 		PrintUserCmdText(iClientID, wscMsg[rand()%3]);			
 		return false;
@@ -310,7 +310,7 @@ namespace HkIEngine
 					if (response==PROCEED_DOCK)
 					{
 					// Print out a message when a player ship docks.
-					wstring wscMsg = L"%time Traffic control alert: %player has requested to dock";
+					wstring wscMsg = L"%time 注意：%player 请求停靠";
 					wscMsg = ReplaceStr(wscMsg, L"%time", GetTimeString(set_bLocalTime));
 					wscMsg = ReplaceStr(wscMsg, L"%player", (const wchar_t*)Players.GetActiveCharacterName(iClientID));
 					PrintLocalUserCmdText(iClientID, wscMsg, set_iLocalChatRange);
@@ -623,7 +623,7 @@ namespace HkIServerImpl
 						boost::to_upper(hp);
 						if (item->bMounted == true && (hp == "BAY" || hp.substr(0, 4) == "HPCM" || hp.substr(0, 18) == "HPSPECIALEQUIPMENT"))
 						{
-							PrintUserCmdText(iClientID, L"This ship is locked. You can't sell your ID, Armor, or CM/Cloak. You will be kicked to prevent corruption.");
+							PrintUserCmdText(iClientID, L"这艘飞船已经被锁定，你不能出售ID、装甲、反制、隐身，你将被踢出服务器。");
 							wstring wsccharname = (const wchar_t*)Players.GetActiveCharacterName(iClientID);
 							wstring spurdoip;
 							HkGetPlayerIP(iClientID, spurdoip);
@@ -636,7 +636,7 @@ namespace HkIServerImpl
 						}
 						else if (hp != "BAY" && Rename::IsLockedShip(iClientID, 3))
 						{
-							PrintUserCmdText(iClientID, L"Selling equipment is not allowed on this ship. You will now be kicked to prevent corruption.");
+							PrintUserCmdText(iClientID, L"这艘飞船已经被锁定，你不能出售装备，你将被踢出服务器。");
 							wstring wsccharname = (const wchar_t*)Players.GetActiveCharacterName(iClientID);
 							wstring spurdoip;
 							HkGetPlayerIP(iClientID, spurdoip);
@@ -717,7 +717,7 @@ namespace HkIServerImpl
 		{			
 			if (bMounted == true)
 			{
-				PrintUserCmdText(iClientID, L"This ship is locked. You can't mount an ID or Armor. You will be kicked to prevent corruption.");
+				PrintUserCmdText(iClientID, L"这艘飞船已经被锁定，你不能出售ID、装甲，你将被踢出服务器。");
 
 				wstring wsccharname = (const wchar_t*)Players.GetActiveCharacterName(iClientID);
 				wstring spurdoip;
@@ -731,7 +731,7 @@ namespace HkIServerImpl
 			}
 			if (bMounted == false)
 			{
-				PrintUserCmdText(iClientID, L"This ship is locked. You can't unmount your ID or Armor. You will be kicked to prevent corruption.");
+				PrintUserCmdText(iClientID, L"这艘飞船已经被锁定，你不能出售ID、装甲，你将被踢出服务器。");
 
 				wstring wsccharname = (const wchar_t*)Players.GetActiveCharacterName(iClientID);
 				wstring spurdoip;
@@ -936,164 +936,164 @@ struct USERCMD
 // The user chat commands for this plugin
 USERCMD UserCmds[] =
 {
-	{ L"/pos",			MiscCmds::UserCmd_Pos,			L"Usage: /pos" },
-	{ L"/stuck",		MiscCmds::UserCmd_Stuck,		L"Usage: /stuck" },
-	{ L"/droprep",		MiscCmds::UserCmd_DropRep,		L"Usage: /droprep" },
-	{ L"/dice",			MiscCmds::UserCmd_Dice,			L"Usage: /dice 1d20 | 1d20+3 | etc."},
-	{ L"/roll",			MiscCmds::UserCmd_Dice,			L"Usage: /roll 1d20 | 1d20+3 | etc." },
-	{ L"/coin",			MiscCmds::UserCmd_Coin,			L"Usage: /coin" },
-	{ L"/pimpship",		PimpShip::UserCmd_PimpShip,		L"Usage: /pimpship" },
-	{ L"/showsetup",	PimpShip::UserCmd_ShowSetup,	L"Usage: /showsetup" },
-	{ L"/showitems",	PimpShip::UserCmd_ShowItems,	L"Usage: /showitems" },
-	{ L"/setitem",		PimpShip::UserCmd_ChangeItem,	L"Usage: /setitem" },
-	{ L"/buynow",		PimpShip::UserCmd_BuyNow,		L"Usage: /buynow" },
-	{ L"/renameme",		Rename::UserCmd_RenameMe,		L"Usage: /renameme <charname> [password]" },
-	{ L"/movechar",		Rename::UserCmd_MoveChar,		L"Usage: /movechar <charname> <code>" },
-	{ L"/set movecharcode",	Rename::UserCmd_SetMoveCharCode,	L"Usage: /set movecharcode <code>" },
-	{ L"/restart",		Restart::UserCmd_Restart,		L"Usage: /restart <faction>" },
-	{ L"/showrestarts",	Restart::UserCmd_ShowRestarts,	L"Usage: /showrestarts" },
-	{ L"/givecash",		GiveCash::UserCmd_GiveCash,		L"Usage: /givecash <charname> <cash> [anon] or /gc ..." },
-	{ L"/gc",			GiveCash::UserCmd_GiveCash,		L"Usage: /givecash <charname> <cash> [anon] or /gc ..." },
-	{ L"/givecasht",	GiveCash::UserCmd_GiveCashTarget,		L"Usage: /givecasht <cash> [anon] or /gct ..." },
-	{ L"/gct",			GiveCash::UserCmd_GiveCashTarget,		L"Usage: /givecasht <cash> [anon] or /gct ..." },
-	{ L"/sendcash",		GiveCash::UserCmd_GiveCash,		L"Usage: /givecash <charname> <cash> [anon]"},
-	{ L"/set cashcode",	GiveCash::UserCmd_SetCashCode,	L"Usage: /set cashcode <code>"},
-	{ L"/showcash",		GiveCash::UserCmd_ShowCash,		L"Usage: /showcash <charname> <code> or /shc ..." },
-	{ L"/drc",		GiveCash::UserCmd_DrawCash,		L"Usage: /drawcash <charname> <code> <cash> or /drc ..." },
-	{ L"/shc",		GiveCash::UserCmd_ShowCash,		L"Usage: /showcash <charname> <code> or /shc ..." },
-	{ L"/drawcash",		GiveCash::UserCmd_DrawCash,		L"Usage: /drawcash <charname> <code> <cash> or /drc ..." },
-	{ L"/group",		Message::UserCmd_GroupMsg, L"Usage: /group <message> or /g ..." },
-	{ L"/g",			Message::UserCmd_GroupMsg, L"Usage: /group <message> or /g ..." },
-	{ L"/local",		Message::UserCmd_LocalMsg, L"Usage: /local <message> or /l ...>" },
-	{ L"/l",			Message::UserCmd_LocalMsg, L"Usage: /local <message> or /l ...>" },
-	{ L"/system",		Message::UserCmd_SystemMsg, L"Usage: /system <message> or /s ..." },
-	{ L"/s",			Message::UserCmd_SystemMsg, L"Usage: /system <message> or /s ..." },
-	{ L"/invite",		Message::UserCmd_BuiltInCmdHelp, L"Usage: /invite <charname> or /i ..."},
-	{ L"/invite$",		Message::UserCmd_BuiltInCmdHelp, L"Usage: /invite <clientid> or /i$ ..."},
-	{ L"/join",			Message::UserCmd_BuiltInCmdHelp, L"Usage: /join <charname> or /j"},
-	{ L"/setmsg",		Message::UserCmd_SetMsg, L"Usage: /setmsg <n> <msg text>"},
+	{ L"/pos",			MiscCmds::UserCmd_Pos,			L"使用方法：/pos" },
+	{ L"/stuck",		MiscCmds::UserCmd_Stuck,		L"使用方法：/stuck" },
+	{ L"/droprep",		MiscCmds::UserCmd_DropRep,		L"使用方法：/droprep" },
+	{ L"/dice",			MiscCmds::UserCmd_Dice,			L"使用方法：/dice 1d20 或 1d20+3 等。"},
+	{ L"/roll",			MiscCmds::UserCmd_Dice,			L"使用方法：/roll 1d20 或 1d20+3 等。" },
+	{ L"/coin",			MiscCmds::UserCmd_Coin,			L"使用方法：/coin" },
+	{ L"/pimpship",		PimpShip::UserCmd_PimpShip,		L"使用方法：/pimpship" },
+	{ L"/showsetup",	PimpShip::UserCmd_ShowSetup,	L"使用方法：/showsetup" },
+	{ L"/showitems",	PimpShip::UserCmd_ShowItems,	L"使用方法：/showitems" },
+	{ L"/setitem",		PimpShip::UserCmd_ChangeItem,	L"使用方法：/setitem" },
+	{ L"/buynow",		PimpShip::UserCmd_BuyNow,		L"使用方法：/buynow" },
+	{ L"/renameme",		Rename::UserCmd_RenameMe,		L"使用方法：/renameme <角色名> [取钱密码]" },
+	{ L"/movechar",		Rename::UserCmd_MoveChar,		L"使用方法：/movechar <角色名> <转移角色密码>" },
+	{ L"/set movecharcode",	Rename::UserCmd_SetMoveCharCode,	L"使用方法：/set movecharcode <转移角色密码>" },
+	{ L"/restart",		Restart::UserCmd_Restart,		L"使用方法：/restart <势力选项>" },
+	{ L"/showrestarts",	Restart::UserCmd_ShowRestarts,	L"使用方法：/showrestarts" },
+	{ L"/givecash",		GiveCash::UserCmd_GiveCash,		L"使用方法：/givecash <角色名> <金额> [anon] 或 /gc ..." },
+	{ L"/gc",			GiveCash::UserCmd_GiveCash,		L"使用方法：/givecash <角色名> <金额> [anon] 或 /gc ..." },
+	{ L"/givecasht",	GiveCash::UserCmd_GiveCashTarget,		L"使用方法：/givecasht <金额> [anon] 或 /gct ..." },
+	{ L"/gct",			GiveCash::UserCmd_GiveCashTarget,		L"使用方法：/givecasht <金额> [anon] 或 /gct ..." },
+	{ L"/sendcash",		GiveCash::UserCmd_GiveCash,		L"使用方法：/givecash <角色名> <金额> [anon]"},
+	{ L"/set cashcode",	GiveCash::UserCmd_SetCashCode,	L"使用方法：/set cashcode <取钱密码>"},
+	{ L"/showcash",		GiveCash::UserCmd_ShowCash,		L"使用方法：/showcash <角色名> <取钱密码> 或 /shc ..." },
+	{ L"/drc",		GiveCash::UserCmd_DrawCash,		L"使用方法：/drawcash <角色名> <取钱密码> <金额> 或 /drc ..." },
+	{ L"/shc",		GiveCash::UserCmd_ShowCash,		L"使用方法：/showcash <角色名> <取钱密码> 或 /shc ..." },
+	{ L"/drawcash",		GiveCash::UserCmd_DrawCash,		L"使用方法：/drawcash <角色名> <取钱密码> <金额> 或 /drc ..." },
+	{ L"/group",		Message::UserCmd_GroupMsg, L"使用方法：/group <聊天内容> 或 /g ..." },
+	{ L"/g",			Message::UserCmd_GroupMsg, L"使用方法：/group <聊天内容> 或 /g ..." },
+	{ L"/local",		Message::UserCmd_LocalMsg, L"使用方法：/local <聊天内容> 或 /l ...>" },
+	{ L"/l",			Message::UserCmd_LocalMsg, L"使用方法：/local <聊天内容> 或 /l ...>" },
+	{ L"/system",		Message::UserCmd_SystemMsg, L"使用方法：/system <聊天内容> 或 /s ..." },
+	{ L"/s",			Message::UserCmd_SystemMsg, L"使用方法：/system <聊天内容> 或 /s ..." },
+	{ L"/invite",		Message::UserCmd_BuiltInCmdHelp, L"使用方法：/invite <角色名> 或 /i ..."},
+	{ L"/invite$",		Message::UserCmd_BuiltInCmdHelp, L"使用方法：/invite <clientid> 或 /i$ ..."},
+	{ L"/join",			Message::UserCmd_BuiltInCmdHelp, L"使用方法：/join <角色名> 或 /j"},
+	{ L"/setmsg",		Message::UserCmd_SetMsg, L"使用方法：/setmsg <n> <喊话内容>"},
 	{ L"/showmsgs",     Message::UserCmd_ShowMsgs, L"" },
-	{ L"/0",		    Message::UserCmd_DRMsg, L"Usage: /n (n=0-9)"},
-	{ L"/1",		    Message::UserCmd_DRMsg, L"Usage: /n (n=0-9)"},
-	{ L"/2",		    Message::UserCmd_DRMsg, L"Usage: /n (n=0-9)"},
-	{ L"/3",		    Message::UserCmd_DRMsg, L"Usage: /n (n=0-9)"},
-	{ L"/4",		    Message::UserCmd_DRMsg, L"Usage: /n (n=0-9)"},
-	{ L"/5",		    Message::UserCmd_DRMsg, L"Usage: /n (n=0-9)"},
-	{ L"/6",		    Message::UserCmd_DRMsg, L"Usage: /n (n=0-9)"},
-	{ L"/7",		    Message::UserCmd_DRMsg, L"Usage: /n (n=0-9)"},
-	{ L"/8",		    Message::UserCmd_DRMsg, L"Usage: /n (n=0-9)"},
-	{ L"/9",		    Message::UserCmd_DRMsg, L"Usage: /n (n=0-9)"},
-	{ L"/s0",		    Message::UserCmd_SMsg, L"Usage: /sn (n=0-9)"},
-	{ L"/s1",		    Message::UserCmd_SMsg, L"Usage: /sn (n=0-9)"},
-	{ L"/s2",		    Message::UserCmd_SMsg, L"Usage: /sn (n=0-9)"},
-	{ L"/s3",		    Message::UserCmd_SMsg, L"Usage: /sn (n=0-9)"},
-	{ L"/s4",		    Message::UserCmd_SMsg, L"Usage: /sn (n=0-9)"},
-	{ L"/s5",		    Message::UserCmd_SMsg, L"Usage: /sn (n=0-9)"},
-	{ L"/s6",		    Message::UserCmd_SMsg, L"Usage: /sn (n=0-9)"},
-	{ L"/s7",		    Message::UserCmd_SMsg, L"Usage: /sn (n=0-9)"},
-	{ L"/s8",		    Message::UserCmd_SMsg, L"Usage: /sn (n=0-9)"},
-	{ L"/s9",		    Message::UserCmd_SMsg, L"Usage: /sn (n=0-9)"},
-	{ L"/l0",		    Message::UserCmd_LMsg, L"Usage: /ln (n=0-9)"},
-	{ L"/l1",		    Message::UserCmd_LMsg, L"Usage: /ln (n=0-9)"},
-	{ L"/l2",		    Message::UserCmd_LMsg, L"Usage: /ln (n=0-9)"},
-	{ L"/l3",		    Message::UserCmd_LMsg, L"Usage: /ln (n=0-9)"},
-	{ L"/l4",		    Message::UserCmd_LMsg, L"Usage: /ln (n=0-9)"},
-	{ L"/l5",		    Message::UserCmd_LMsg, L"Usage: /ln (n=0-9)"},
-	{ L"/l6",		    Message::UserCmd_LMsg, L"Usage: /ln (n=0-9)"},
-	{ L"/l7",		    Message::UserCmd_LMsg, L"Usage: /ln (n=0-9)"},
-	{ L"/l8",		    Message::UserCmd_LMsg, L"Usage: /ln (n=0-9)"},
-	{ L"/l9",		    Message::UserCmd_LMsg, L"Usage: /ln (n=0-9)"},
-	{ L"/g0",		    Message::UserCmd_GMsg, L"Usage: /gn (n=0-9)"},
-	{ L"/g1",		    Message::UserCmd_GMsg, L"Usage: /gn (n=0-9)"},
-	{ L"/g2",		    Message::UserCmd_GMsg, L"Usage: /gn (n=0-9)"},
-	{ L"/g3",		    Message::UserCmd_GMsg, L"Usage: /gn (n=0-9)"},
-	{ L"/g4",		    Message::UserCmd_GMsg, L"Usage: /gn (n=0-9)"},
-	{ L"/g5",		    Message::UserCmd_GMsg, L"Usage: /gn (n=0-9)"},
-	{ L"/g6",		    Message::UserCmd_GMsg, L"Usage: /gn (n=0-9)"},
-	{ L"/g7",		    Message::UserCmd_GMsg, L"Usage: /gn (n=0-9)"},
-	{ L"/g8",		    Message::UserCmd_GMsg, L"Usage: /gn (n=0-9)"},
-	{ L"/g9",		    Message::UserCmd_GMsg, L"Usage: /gn (n=0-9)"},
-	{ L"/t0",		    Message::UserCmd_SendToLastTarget, L"Usage: /tn (n=0-9)"},
-	{ L"/t1",		    Message::UserCmd_SendToLastTarget, L"Usage: /tn (n=0-9)"},
-	{ L"/t2",		    Message::UserCmd_SendToLastTarget, L"Usage: /tn (n=0-9)"},
-	{ L"/t3",		    Message::UserCmd_SendToLastTarget, L"Usage: /tn (n=0-9)"},
-	{ L"/t4",		    Message::UserCmd_SendToLastTarget, L"Usage: /tn (n=0-9)"},
-	{ L"/t5",		    Message::UserCmd_SendToLastTarget, L"Usage: /tn (n=0-9)"},
-	{ L"/t6",		    Message::UserCmd_SendToLastTarget, L"Usage: /tn (n=0-9)"},
-	{ L"/t7",		    Message::UserCmd_SendToLastTarget, L"Usage: /tn (n=0-9)"},
-	{ L"/t8",		    Message::UserCmd_SendToLastTarget, L"Usage: /tn (n=0-9)"},
-	{ L"/t9",		    Message::UserCmd_SendToLastTarget, L"Usage: /tn (n=0-9)"},
-	{ L"/target",       Message::UserCmd_SendToLastTarget, L"Usage: /target <message> or /t ..." },
-	{ L"/t",            Message::UserCmd_SendToLastTarget, L"Usage: /target <message> or /t ..." },
-	{ L"/reply",        Message::UserCmd_ReplyToLastPMSender, L"Usage: /reply <message> or /r .." },
-	{ L"/r",            Message::UserCmd_ReplyToLastPMSender, L"Usage: /reply <message> or /r ..." },
-	{ L"/privatemsg$",	Message::UserCmd_PrivateMsgID, L"Usage: /privatemsg$ <clientid> <messsage> or /pm ..."},
-	{ L"/pm$",			Message::UserCmd_PrivateMsgID, L"Usage: /privatemsg$ <clientid> <messsage> or /pm ..."},
-	{ L"/privatemsg",	Message::UserCmd_PrivateMsg, L"Usage: /privatemsg <charname> <messsage> or /pm ..."},
-	{ L"/pm",			Message::UserCmd_PrivateMsg, L"Usage: /privatemsg <charname> <messsage> or /pm ..."},
-	{ L"/factionmsg",	Message::UserCmd_FactionMsg, L"Usage: /factionmsg <tag> <message> or /fm ..."},
-	{ L"/fm",			Message::UserCmd_FactionMsg, L"Usage: /factionmsg <tag> <message> or /fm ..."},
-	{ L"/invite",	Message::UserCmd_Invite, L"Usage: /invite <name> or /i ..." },
-	{ L"/i",			Message::UserCmd_Invite, L"Usage: /invite <name> or /i ..." },
-	{ L"/factioninvite",Message::UserCmd_FactionInvite, L"Usage: /factioninvite <tag> or /fi ..."},
-	{ L"/fi",			Message::UserCmd_FactionInvite, L"Usage: /factioninvite <tag> or /fi ..."},
+	{ L"/0",		    Message::UserCmd_DRMsg, L"使用方法：/n (n=0-9)"},
+	{ L"/1",		    Message::UserCmd_DRMsg, L"使用方法：/n (n=0-9)"},
+	{ L"/2",		    Message::UserCmd_DRMsg, L"使用方法：/n (n=0-9)"},
+	{ L"/3",		    Message::UserCmd_DRMsg, L"使用方法：/n (n=0-9)"},
+	{ L"/4",		    Message::UserCmd_DRMsg, L"使用方法：/n (n=0-9)"},
+	{ L"/5",		    Message::UserCmd_DRMsg, L"使用方法：/n (n=0-9)"},
+	{ L"/6",		    Message::UserCmd_DRMsg, L"使用方法：/n (n=0-9)"},
+	{ L"/7",		    Message::UserCmd_DRMsg, L"使用方法：/n (n=0-9)"},
+	{ L"/8",		    Message::UserCmd_DRMsg, L"使用方法：/n (n=0-9)"},
+	{ L"/9",		    Message::UserCmd_DRMsg, L"使用方法：/n (n=0-9)"},
+	{ L"/s0",		    Message::UserCmd_SMsg, L"使用方法：/sn (n=0-9)"},
+	{ L"/s1",		    Message::UserCmd_SMsg, L"使用方法：/sn (n=0-9)"},
+	{ L"/s2",		    Message::UserCmd_SMsg, L"使用方法：/sn (n=0-9)"},
+	{ L"/s3",		    Message::UserCmd_SMsg, L"使用方法：/sn (n=0-9)"},
+	{ L"/s4",		    Message::UserCmd_SMsg, L"使用方法：/sn (n=0-9)"},
+	{ L"/s5",		    Message::UserCmd_SMsg, L"使用方法：/sn (n=0-9)"},
+	{ L"/s6",		    Message::UserCmd_SMsg, L"使用方法：/sn (n=0-9)"},
+	{ L"/s7",		    Message::UserCmd_SMsg, L"使用方法：/sn (n=0-9)"},
+	{ L"/s8",		    Message::UserCmd_SMsg, L"使用方法：/sn (n=0-9)"},
+	{ L"/s9",		    Message::UserCmd_SMsg, L"使用方法：/sn (n=0-9)"},
+	{ L"/l0",		    Message::UserCmd_LMsg, L"使用方法：/ln (n=0-9)"},
+	{ L"/l1",		    Message::UserCmd_LMsg, L"使用方法：/ln (n=0-9)"},
+	{ L"/l2",		    Message::UserCmd_LMsg, L"使用方法：/ln (n=0-9)"},
+	{ L"/l3",		    Message::UserCmd_LMsg, L"使用方法：/ln (n=0-9)"},
+	{ L"/l4",		    Message::UserCmd_LMsg, L"使用方法：/ln (n=0-9)"},
+	{ L"/l5",		    Message::UserCmd_LMsg, L"使用方法：/ln (n=0-9)"},
+	{ L"/l6",		    Message::UserCmd_LMsg, L"使用方法：/ln (n=0-9)"},
+	{ L"/l7",		    Message::UserCmd_LMsg, L"使用方法：/ln (n=0-9)"},
+	{ L"/l8",		    Message::UserCmd_LMsg, L"使用方法：/ln (n=0-9)"},
+	{ L"/l9",		    Message::UserCmd_LMsg, L"使用方法：/ln (n=0-9)"},
+	{ L"/g0",		    Message::UserCmd_GMsg, L"使用方法：/gn (n=0-9)"},
+	{ L"/g1",		    Message::UserCmd_GMsg, L"使用方法：/gn (n=0-9)"},
+	{ L"/g2",		    Message::UserCmd_GMsg, L"使用方法：/gn (n=0-9)"},
+	{ L"/g3",		    Message::UserCmd_GMsg, L"使用方法：/gn (n=0-9)"},
+	{ L"/g4",		    Message::UserCmd_GMsg, L"使用方法：/gn (n=0-9)"},
+	{ L"/g5",		    Message::UserCmd_GMsg, L"使用方法：/gn (n=0-9)"},
+	{ L"/g6",		    Message::UserCmd_GMsg, L"使用方法：/gn (n=0-9)"},
+	{ L"/g7",		    Message::UserCmd_GMsg, L"使用方法：/gn (n=0-9)"},
+	{ L"/g8",		    Message::UserCmd_GMsg, L"使用方法：/gn (n=0-9)"},
+	{ L"/g9",		    Message::UserCmd_GMsg, L"使用方法：/gn (n=0-9)"},
+	{ L"/t0",		    Message::UserCmd_SendToLastTarget, L"使用方法：/tn (n=0-9)"},
+	{ L"/t1",		    Message::UserCmd_SendToLastTarget, L"使用方法：/tn (n=0-9)"},
+	{ L"/t2",		    Message::UserCmd_SendToLastTarget, L"使用方法：/tn (n=0-9)"},
+	{ L"/t3",		    Message::UserCmd_SendToLastTarget, L"使用方法：/tn (n=0-9)"},
+	{ L"/t4",		    Message::UserCmd_SendToLastTarget, L"使用方法：/tn (n=0-9)"},
+	{ L"/t5",		    Message::UserCmd_SendToLastTarget, L"使用方法：/tn (n=0-9)"},
+	{ L"/t6",		    Message::UserCmd_SendToLastTarget, L"使用方法：/tn (n=0-9)"},
+	{ L"/t7",		    Message::UserCmd_SendToLastTarget, L"使用方法：/tn (n=0-9)"},
+	{ L"/t8",		    Message::UserCmd_SendToLastTarget, L"使用方法：/tn (n=0-9)"},
+	{ L"/t9",		    Message::UserCmd_SendToLastTarget, L"使用方法：/tn (n=0-9)"},
+	{ L"/target",       Message::UserCmd_SendToLastTarget, L"使用方法：/target <聊天内容> 或 /t ..." },
+	{ L"/t",            Message::UserCmd_SendToLastTarget, L"使用方法：/target <聊天内容> 或 /t ..." },
+	{ L"/reply",        Message::UserCmd_ReplyToLastPMSender, L"使用方法：/reply <聊天内容> 或 /r .." },
+	{ L"/r",            Message::UserCmd_ReplyToLastPMSender, L"使用方法：/reply <聊天内容> 或 /r ..." },
+	{ L"/privatemsg$",	Message::UserCmd_PrivateMsgID, L"使用方法：/privatemsg$ <clientid> <聊天内容> 或 /pm ..."},
+	{ L"/pm$",			Message::UserCmd_PrivateMsgID, L"使用方法：/privatemsg$ <clientid> <聊天内容> 或 /pm ..."},
+	{ L"/privatemsg",	Message::UserCmd_PrivateMsg, L"使用方法：/privatemsg <角色名> <聊天内容> 或 /pm ..."},
+	{ L"/pm",			Message::UserCmd_PrivateMsg, L"使用方法：/privatemsg <角色名> <聊天内容> 或 /pm ..."},
+	{ L"/factionmsg",	Message::UserCmd_FactionMsg, L"使用方法：/factionmsg <tag> <聊天内容> 或 /fm ..."},
+	{ L"/fm",			Message::UserCmd_FactionMsg, L"使用方法：/factionmsg <tag> <聊天内容> 或 /fm ..."},
+	{ L"/invite",	Message::UserCmd_Invite, L"使用方法：/invite <角色名> 或 /i ..." },
+	{ L"/i",			Message::UserCmd_Invite, L"使用方法：/invite <角色名> 或 /i ..." },
+	{ L"/factioninvite",Message::UserCmd_FactionInvite, L"使用方法：/factioninvite <tag> 或 /fi ..."},
+	{ L"/fi",			Message::UserCmd_FactionInvite, L"使用方法：/factioninvite <tag> 或 /fi ..."},
 	{ L"/lastpm",       Message::UserCmd_ShowLastPMSender, L""},
-	{ L"/set chattime", Message::UserCmd_SetChatTime, L"Usage: /set chattime [on|off]"},
-	{ L"/set dietime",  Message::UserCmd_SetDeathTime, L"Usage: /set dietime [on|off]"},
+	{ L"/set chattime", Message::UserCmd_SetChatTime, L"使用方法：/set chattime [on|off]"},
+	{ L"/set dietime",  Message::UserCmd_SetDeathTime, L"使用方法：/set dietime [on|off]"},
 	{ L"/help",			Message::UserCmd_CustomHelp, L""},
 	{ L"/h",			Message::UserCmd_CustomHelp, L""},
 	{ L"/?",			Message::UserCmd_CustomHelp, L""},
 	{ L"/commandlist",	Message::UserCmd_CommandList, L""},
-	{ L"/mail",			Message::UserCmd_MailShow, L"Usage: /mail <msgnum>"},
-	{ L"/maildel",		Message::UserCmd_MailDel, L"Usage: /maildel <msgnum>"},
-	{ L"/si",			PlayerInfo::UserCmd_ShowInfo, L"Usage: /showinfo"},
-	{ L"/setinfo",		PlayerInfo::UserCmd_SetInfo, L"Usage: /setinfo"},
+	{ L"/mail",			Message::UserCmd_MailShow, L"使用方法：/mail <msgnum>"},
+	{ L"/maildel",		Message::UserCmd_MailDel, L"使用方法：/maildel <msgnum>"},
+	{ L"/si",			PlayerInfo::UserCmd_ShowInfo, L"使用方法：/showinfo"},
+	{ L"/setinfo",		PlayerInfo::UserCmd_SetInfo, L"使用方法：/setinfo"},
 	{ L"/time",			Message::UserCmd_Time, L""},
 	{ L"/time*",		Message::UserCmd_Time, L""},
-	{ L"/showinfo",		PlayerInfo::UserCmd_ShowInfo, L"Usage: /showinfo"},
-	{ L"/showinfo*",	PlayerInfo::UserCmd_ShowInfo, L"Usage: /showinfo"},
-	{ L"/lights",		MiscCmds::UserCmd_Lights, L"Usage: /lights"},
-	{ L"/lights*",		MiscCmds::UserCmd_Lights, L"Usage: /lights"},
-	//{ L"/selfdestruct",	MiscCmds::UserCmd_SelfDestruct, L"Usage: /selfdestruct"},
-	//{ L"/selfdestruct*",MiscCmds::UserCmd_SelfDestruct, L"Usage: /selfdestruct"},
-	{ L"/shields",		MiscCmds::UserCmd_Shields, L"Usage: /shields"},
-	{ L"/shields*",		MiscCmds::UserCmd_Shields, L"Usage: /shields"},
-	//{ L"/ss",		    MiscCmds::UserCmd_Screenshot, L"Usage: /ss"},
-	{ L"/survey",		HyperJump::UserCmd_Survey, L"Usage: /survey"},
-	{ L"/showcoords",		Message::UserCmd_ShowCoords, L"Usage: /savecoords <n>"},
-	{ L"/savecoords",		Message::UserCmd_SaveCoords, L"Usage: /savecoords <n> <text>"},
-	{ L"/c0",		Message::UserCmd_LoadCoords, L"Usage: /cn (n=0-9)"},
-	{ L"/c1",		Message::UserCmd_LoadCoords, L"Usage: /cn (n=0-9)"},
-	{ L"/c2",		Message::UserCmd_LoadCoords, L"Usage: /cn (n=0-9)"},
-	{ L"/c3",		Message::UserCmd_LoadCoords, L"Usage: /cn (n=0-9)"},
-	{ L"/c4",		Message::UserCmd_LoadCoords, L"Usage: /cn (n=0-9)"},
-	{ L"/c5",		Message::UserCmd_LoadCoords, L"Usage: /cn (n=0-9)"},
-	{ L"/c6",		Message::UserCmd_LoadCoords, L"Usage: /cn (n=0-9)"},
-	{ L"/c7",		Message::UserCmd_LoadCoords, L"Usage: /cn (n=0-9)"},
-	{ L"/c8",		Message::UserCmd_LoadCoords, L"Usage: /cn (n=0-9)"},
-	{ L"/c9",		Message::UserCmd_LoadCoords, L"Usage: /cn (n=0-9)"},
-	{ L"/setcoords",	HyperJump::UserCmd_SetCoords, L"Usage: /setcoords"},
-	{ L"/jump",			HyperJump::UserCmd_ActivateJumpDrive, L"Usage: /jump"},
-	{ L"/jump*",		HyperJump::UserCmd_ActivateJumpDrive, L"Usage: /jump"},
-	{ L"/beacon",		HyperJump::UserCmd_DeployBeacon, L"Usage: /beacon"},
-	{ L"/beacon*",		HyperJump::UserCmd_DeployBeacon, L"Usage: /beacon"},
-	{ L"/jumpbeacon",		HyperJump::UserCmd_JumpBeacon, L"Usage: /jumpbeacon"},
-	{ L"/jumpbeacon*",		HyperJump::UserCmd_JumpBeacon, L"Usage: /jumpbeacon"},
-	{ L"/charge",		HyperJump::UserCmd_ChargeJumpDrive, L"Usage: /charge"},
-	{ L"/charge*",		HyperJump::UserCmd_ChargeJumpDrive, L"Usage: /charge"},
-	{ L"/jumpsys",		HyperJump::UserCmd_ListJumpableSystems, L"Usage: /jumpsys"},
-	{ L"/showscan",		SystemSensor::UserCmd_ShowScan, L"Usage: /showscan or /scan <charname>"},
-	{ L"/showscan$",	SystemSensor::UserCmd_ShowScan, L"Usage: /showscan$ or /scanid <clientid>"},
-	{ L"/scan",			SystemSensor::UserCmd_ShowScan, L"Usage: /showscan or /scan <charname>"},
-	{ L"/scanid",		SystemSensor::UserCmd_ShowScan, L"Usage: /showscan$ or /scanid <clientid>"},
-	{ L"/net",			SystemSensor::UserCmd_Net, L"Usage: /net [all|jumponly|off]"},
-	{ L"/maketag",		Rename::UserCmd_MakeTag, L"Usage: /maketag <tag> <master password> <description>"},
-	{ L"/droptag",		Rename::UserCmd_DropTag, L"Usage: /droptag <tag> <master password>"},
-	{ L"/settagpass",	Rename::UserCmd_SetTagPass, L"Usage: /settagpass <tag> <master password> <rename password>"},
+	{ L"/showinfo",		PlayerInfo::UserCmd_ShowInfo, L"使用方法：/showinfo"},
+	{ L"/showinfo*",	PlayerInfo::UserCmd_ShowInfo, L"使用方法：/showinfo"},
+	{ L"/lights",		MiscCmds::UserCmd_Lights, L"使用方法：/lights"},
+	{ L"/lights*",		MiscCmds::UserCmd_Lights, L"使用方法：/lights"},
+	//{ L"/selfdestruct",	MiscCmds::UserCmd_SelfDestruct, L"使用方法：/selfdestruct"},
+	//{ L"/selfdestruct*",MiscCmds::UserCmd_SelfDestruct, L"使用方法：/selfdestruct"},
+	{ L"/shields",		MiscCmds::UserCmd_Shields, L"使用方法：/shields"},
+	{ L"/shields*",		MiscCmds::UserCmd_Shields, L"使用方法：/shields"},
+	//{ L"/ss",		    MiscCmds::UserCmd_Screenshot, L"使用方法：/ss"},
+	{ L"/survey",		HyperJump::UserCmd_Survey, L"使用方法：/survey"},
+	{ L"/showcoords",		Message::UserCmd_ShowCoords, L"使用方法：/savecoords <n>"},
+	{ L"/savecoords",		Message::UserCmd_SaveCoords, L"使用方法：/savecoords <n> <text>"},
+	{ L"/c0",		Message::UserCmd_LoadCoords, L"使用方法：/cn (n=0-9)"},
+	{ L"/c1",		Message::UserCmd_LoadCoords, L"使用方法：/cn (n=0-9)"},
+	{ L"/c2",		Message::UserCmd_LoadCoords, L"使用方法：/cn (n=0-9)"},
+	{ L"/c3",		Message::UserCmd_LoadCoords, L"使用方法：/cn (n=0-9)"},
+	{ L"/c4",		Message::UserCmd_LoadCoords, L"使用方法：/cn (n=0-9)"},
+	{ L"/c5",		Message::UserCmd_LoadCoords, L"使用方法：/cn (n=0-9)"},
+	{ L"/c6",		Message::UserCmd_LoadCoords, L"使用方法：/cn (n=0-9)"},
+	{ L"/c7",		Message::UserCmd_LoadCoords, L"使用方法：/cn (n=0-9)"},
+	{ L"/c8",		Message::UserCmd_LoadCoords, L"使用方法：/cn (n=0-9)"},
+	{ L"/c9",		Message::UserCmd_LoadCoords, L"使用方法：/cn (n=0-9)"},
+	{ L"/setcoords",	HyperJump::UserCmd_SetCoords, L"使用方法：/setcoords"},
+	{ L"/jump",			HyperJump::UserCmd_ActivateJumpDrive, L"使用方法：/jump"},
+	{ L"/jump*",		HyperJump::UserCmd_ActivateJumpDrive, L"使用方法：/jump"},
+	{ L"/beacon",		HyperJump::UserCmd_DeployBeacon, L"使用方法：/beacon"},
+	{ L"/beacon*",		HyperJump::UserCmd_DeployBeacon, L"使用方法：/beacon"},
+	{ L"/jumpbeacon",		HyperJump::UserCmd_JumpBeacon, L"使用方法：/jumpbeacon"},
+	{ L"/jumpbeacon*",		HyperJump::UserCmd_JumpBeacon, L"使用方法：/jumpbeacon"},
+	{ L"/charge",		HyperJump::UserCmd_ChargeJumpDrive, L"使用方法：/charge"},
+	{ L"/charge*",		HyperJump::UserCmd_ChargeJumpDrive, L"使用方法：/charge"},
+	{ L"/jumpsys",		HyperJump::UserCmd_ListJumpableSystems, L"使用方法：/jumpsys"},
+	{ L"/showscan",		SystemSensor::UserCmd_ShowScan, L"使用方法：/showscan 或 /scan <角色名>"},
+	{ L"/showscan$",	SystemSensor::UserCmd_ShowScan, L"使用方法：/showscan$ 或 /scanid <clientid>"},
+	{ L"/scan",			SystemSensor::UserCmd_ShowScan, L"使用方法：/showscan 或 /scan <角色名>"},
+	{ L"/scanid",		SystemSensor::UserCmd_ShowScan, L"使用方法：/showscan$ 或 /scanid <clientid>"},
+	{ L"/net",			SystemSensor::UserCmd_Net, L"使用方法：/net [all|jumponly|off]"},
+	{ L"/maketag",		Rename::UserCmd_MakeTag, L"使用方法：/maketag <tag> <master password> <描述>"},
+	{ L"/droptag",		Rename::UserCmd_DropTag, L"使用方法：/droptag <tag> <master password>"},
+	{ L"/settagpass",	Rename::UserCmd_SetTagPass, L"使用方法：/settagpass <tag> <master password> <rename password>"},
 
 	// universe talk (ben, 2019/4/2)
-	{ L"/u",			Message::UserCmd_UnivMsg, L"Usage: /universe <message> or /u ...>" },
-	{ L"/universe",		Message::UserCmd_UnivMsg, L"Usage: /universe <message> or /u ...>" },
+	{ L"/u",			Message::UserCmd_UnivMsg, L"使用方法：/universe <聊天内容> 或 /u ...>" },
+	{ L"/universe",		Message::UserCmd_UnivMsg, L"使用方法：/universe <聊天内容> 或 /u ...>" },
 
 	// smart tractor (ben, 2019/4/3)
 	{ L"/tract",		MiscCmds::UserCmd_SmartTractor, L"使用方法：/tract [on|silent|off]" },
@@ -1162,12 +1162,12 @@ void UserCmd_Help(uint iClientID, const wstring &wscParam)
 
 	if (!set_bEnableRenameMe)
 	{
-		PrintUserCmdText(iClientID, L"/renameme <charname>");
+		PrintUserCmdText(iClientID, L"/renameme <角色名>");
 	}
 
 	if (!set_bEnableMoveChar)
 	{
-		PrintUserCmdText(iClientID, L"/movechar <charname> <code>");
+		PrintUserCmdText(iClientID, L"/movechar <角色名> <code>");
 		PrintUserCmdText(iClientID, L"/set movecharcode <code>");
 	}
 
@@ -1179,9 +1179,9 @@ void UserCmd_Help(uint iClientID, const wstring &wscParam)
 
 	if (set_bEnableGiveCash)
 	{
-		PrintUserCmdText(iClientID, L"/givecash <charname> <cash>");
-		PrintUserCmdText(iClientID, L"/drawcash <charname> <code> <cash>");
-		PrintUserCmdText(iClientID, L"/showcash <charname> <code>");
+		PrintUserCmdText(iClientID, L"/givecash <角色名> <金额>");
+		PrintUserCmdText(iClientID, L"/drawcash <角色名> <code> <金额>");
+		PrintUserCmdText(iClientID, L"/showcash <角色名> <code>");
 		PrintUserCmdText(iClientID, L"/set cashcode <code>");
 	}
 
@@ -1561,15 +1561,15 @@ void CmdHelp_Callback(CCmds* classptr)
 {
 	returncode = DEFAULT_RETURNCODE;
 	classptr->Print(L"move x, y, z\n");
-	classptr->Print(L"pull <charname>\n");
-	classptr->Print(L"chase <charname>\n");
+	classptr->Print(L"pull <角色名>\n");
+	classptr->Print(L"chase <角色名>\n");
 	classptr->Print(L"smiteall [die]\n");
 	classptr->Print(L"testbot <system> <testtime>\n");
-	classptr->Print(L"authchar <charname>\n");
+	classptr->Print(L"authchar <角色名>\n");
 	classptr->Print(L"reloadbans\n");
-	classptr->Print(L"setaccmovecode <charname> <code>\n");
+	classptr->Print(L"setaccmovecode <角色名> <code>\n");
 	classptr->Print(L"rotatelogs\n");
-	classptr->Print(L"privatemsg|pm <charname> <message>\n");
+	classptr->Print(L"privatemsg|pm <角色名> <聊天内容>\n");
 	
 	classptr->Print(L"showtags\n");
 	classptr->Print(L"addtag <tag> <password>\n");

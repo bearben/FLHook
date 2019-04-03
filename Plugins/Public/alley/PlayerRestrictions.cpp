@@ -368,7 +368,7 @@ bool GiftCmd(uint iClientID, const wstring &wscCmd, const wstring &wscParam, con
 	// and stop processing but tell FLHook that we processed the command.
 	if (wscParam.size()==0)
 	{
-		PrintUserCmdText(iClientID, L"ERR Invalid parameters");
+		PrintUserCmdText(iClientID, L"错误：参数不合法");
 		PrintUserCmdText(iClientID, usage);
 		return true;
 	}
@@ -389,7 +389,7 @@ bool GiftCmd(uint iClientID, const wstring &wscCmd, const wstring &wscParam, con
 
 	if (Cash<=0)
 	{
-		PrintUserCmdText(iClientID, L"ERR Invalid parameters");
+		PrintUserCmdText(iClientID, L"错误：参数不合法");
 		PrintUserCmdText(iClientID, usage);
 		return true;
 	}

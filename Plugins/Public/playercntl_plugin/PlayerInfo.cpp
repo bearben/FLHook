@@ -156,7 +156,7 @@ namespace PlayerInfo
 		}
 		else
 		{
-			PrintUserCmdText(iClientID, L"ERR Invalid parameters");
+			PrintUserCmdText(iClientID, L"错误：参数不合法");
 			PrintUserCmdText(iClientID, L"/setinfo <paragraph> <command> <text>");
 			PrintUserCmdText(iClientID, L"|  <paragraph> The paragraph number in the range 1-%d", MAX_PARAGRAPHS);
 			PrintUserCmdText(iClientID, L"|  <command> The command to perform on the paragraph, 'a' for append, 'd' for delete");

@@ -187,14 +187,14 @@ namespace GiveCash
 		pub::SpaceObj::GetTarget(iShip, iTargetShip);
 		if (!iTargetShip)
 		{
-			PrintUserCmdText(iClientID, L"ERR: This is not a ship.");
+			PrintUserCmdText(iClientID, L"错误：目标不是飞船。");
 			return true;
 		}
 		wstring wscCharname = (const wchar_t*)Players.GetActiveCharacterName(iClientID);
 		uint iClientIDTarget = HkGetClientIDByShip(iTargetShip);
 		if (!iClientIDTarget)
 		{
-			PrintUserCmdText(iClientID, L"ERR: This is not a player ship.");
+			PrintUserCmdText(iClientID, L"错误：目标不是玩家飞船。");
 			return true;
 		}
 		wstring wscTargetCharname = (const wchar_t*)Players.GetActiveCharacterName(iClientIDTarget);
@@ -207,7 +207,7 @@ namespace GiveCash
 		int cash = ToInt(wscCash);
 		if ((!wscTargetCharname.length() || cash <= 0) || (wscAnon.size() && wscAnon != L"anon"))
 		{
-			PrintUserCmdText(iClientID, L"ERR: Invalid parameters");
+			PrintUserCmdText(iClientID, L"错误：参数不合法");
 			PrintUserCmdText(iClientID, usage);
 			return true;
 		}
@@ -236,7 +236,7 @@ namespace GiveCash
 		int cash = ToInt(wscCash);
 		if ((!wscTargetCharname.length() || cash<=0) || (wscAnon.size() && wscAnon!=L"anon"))
 		{
-			PrintUserCmdText(iClientID, L"ERR: Invalid parameters");
+			PrintUserCmdText(iClientID, L"错误：参数不合法");
 			PrintUserCmdText(iClientID, usage);
 			return true;
 		}
@@ -255,24 +255,24 @@ namespace GiveCash
 
 		if (HkGetAccountByCharname(wscTargetCharname) == 0)
 		{
-			PrintUserCmdText(iClientID, L"ERR: char does not exist");
+			PrintUserCmdText(iClientID, L"错误：角色不存在");
 			return true;
 		}
 
 		int secs = 0;
 		if ((err = HkGetOnLineTime(wscCharname, secs)) != HKE_OK) {
-			PrintUserCmdText(iClientID, L"ERR: " + HkErrGetText(err));
+			PrintUserCmdText(iClientID, L"错误：" + HkErrGetText(err));
 			return true;
 		}
 		if (secs<set_iMinTime)
 		{
-			PrintUserCmdText(iClientID, L"ERR: insufficient time online");
+			PrintUserCmdText(iClientID, L"错误：在线时间不足");
 			return true;
 		}
 
 		if (InBlockedSystem(wscCharname) || InBlockedSystem(wscTargetCharname))
 		{
-			PrintUserCmdText(iClientID, L"ERR: cash transfer blocked");
+			PrintUserCmdText(iClientID, L"错误：转账被禁止");
 			return true;
 		}
 
@@ -280,16 +280,16 @@ namespace GiveCash
 		// and check that the character has enough cash.
 		int iCash = 0;
 		if ((err = HkGetCash(wscCharname, iCash)) != HKE_OK) {
-			PrintUserCmdText(iClientID, L"ERR: " + HkErrGetText(err));
+			PrintUserCmdText(iClientID, L"错误：" + HkErrGetText(err));
 			return true;
 		}
 		if (cash<set_iMinTransfer || cash<0) {
-			PrintUserCmdText(iClientID, L"ERR: Transfer too small, minimum transfer " + ToMoneyStr(set_iMinTransfer) + L" credits");
+			PrintUserCmdText(iClientID, L"错误：转账金额过小，最低额度为 " + ToMoneyStr(set_iMinTransfer));
 			return true;
 		}
 		if (iCash<cash)
 		{
-			PrintUserCmdText(iClientID, L"ERR: Insufficient credits");
+			PrintUserCmdText(iClientID, L"错误：现金不足");
 			return true;
 		}
 
@@ -297,12 +297,12 @@ namespace GiveCash
 		float fTargetValue = 0.0f;
 		if ((err = HKGetShipValue(wscTargetCharname, fTargetValue)) != HKE_OK)
 		{
-			PrintUserCmdText(iClientID, L"ERR: " + HkErrGetText(err));
+			PrintUserCmdText(iClientID, L"错误：" + HkErrGetText(err));
 			return true;
 		}
 		if ((fTargetValue + cash) > 2000000000.0f)
 		{
-			PrintUserCmdText(iClientID, L"ERR: Transfer will exceed credit limit");
+			PrintUserCmdText(iClientID, L"错误：转账金额超出上限");
 			return true;
 		}
 
@@ -310,7 +310,7 @@ namespace GiveCash
 		int iExpectedCash = 0;
 		if ((err = HkGetCash(wscTargetCharname, iExpectedCash)) != HKE_OK)
 		{
-			PrintUserCmdText(iClientID, L"ERR: Get cash failed err=" + HkErrGetText(err));
+			PrintUserCmdText(iClientID, L"错误：获取金额失败 err=" + HkErrGetText(err));
 			return true;
 		}
 		iExpectedCash += cash;
@@ -321,7 +321,7 @@ namespace GiveCash
 		{
 			if (HkAntiCheat(targetClientId) != HKE_OK)
 			{
-				PrintUserCmdText(iClientID, L"ERR: Transfer failed");
+				PrintUserCmdText(iClientID, L"错误：转账失败");
 				AddLog("NOTICE: Possible cheating when sending %s credits from %s (%s) to %s (%s)",
 					wstos(ToMoneyStr(cash)).c_str(),
 					wstos(wscCharname).c_str(), wstos(HkGetAccountID(HkGetAccountByCharname(wscCharname))).c_str(),
@@ -335,7 +335,7 @@ namespace GiveCash
 		{
 			if (ClientInfo[iClientID].iTradePartner || ClientInfo[targetClientId].iTradePartner)
 			{
-				PrintUserCmdText(iClientID, L"ERR: Trade window open");
+				PrintUserCmdText(iClientID, L"错误：请关闭交易窗口");
 				AddLog("NOTICE: Trade window open when sending %s credits from %s (%s) to %s (%s) %u %u",
 					wstos(ToMoneyStr(cash)).c_str(),
 					wstos(wscCharname).c_str(), wstos(HkGetAccountID(HkGetAccountByCharname(wscCharname))).c_str(),
@@ -349,13 +349,13 @@ namespace GiveCash
 		// save completes before allowing the cash to be added to the target ship.
 		if ((err = HkAddCash(wscCharname, 0 - cash)) != HKE_OK)
 		{
-			PrintUserCmdText(iClientID, L"ERR: Remove cash failed err=" + HkErrGetText(err));
+			PrintUserCmdText(iClientID, L"错误：移除现金失败 err=" + HkErrGetText(err));
 			return true;
 		}
 
 		if (HkAntiCheat(iClientID) != HKE_OK)
 		{
-			PrintUserCmdText(iClientID, L"ERR: Transfer failed");
+			PrintUserCmdText(iClientID, L"错误：转账失败");
 			AddLog("NOTICE: Possible cheating when sending %s credits from %s (%s) to %s (%s)",
 				wstos(ToMoneyStr(cash)).c_str(),
 				wstos(wscCharname).c_str(), wstos(HkGetAccountID(HkGetAccountByCharname(wscCharname))).c_str(),
@@ -367,7 +367,7 @@ namespace GiveCash
 		// Add cash to target character
 		if ((err = HkAddCash(wscTargetCharname, cash)) != HKE_OK)
 		{
-			PrintUserCmdText(iClientID, L"ERR: Add cash failed err=" + HkErrGetText(err));
+			PrintUserCmdText(iClientID, L"错误：添加金额失败 err=" + HkErrGetText(err));
 			return true;
 		}
 
@@ -376,7 +376,7 @@ namespace GiveCash
 		{
 			if (HkAntiCheat(targetClientId) != HKE_OK)
 			{
-				PrintUserCmdText(iClientID, L"ERR: Transfer failed");
+				PrintUserCmdText(iClientID, L"错误：转账失败");
 				AddLog("NOTICE: Possible cheating when sending %s credits from %s (%s) to %s (%s)",
 					wstos(ToMoneyStr(cash)).c_str(),
 					wstos(wscCharname).c_str(), wstos(HkGetAccountID(HkGetAccountByCharname(wscCharname))).c_str(),
@@ -397,13 +397,17 @@ namespace GiveCash
 				wstos(wscCharname).c_str(), wstos(HkGetAccountID(HkGetAccountByCharname(wscCharname))).c_str(),
 				wstos(wscTargetCharname).c_str(), wstos(HkGetAccountID(HkGetAccountByCharname(wscTargetCharname))).c_str(),
 				wstos(ToMoneyStr(iCurrCash)).c_str(), wstos(ToMoneyStr(iExpectedCash)).c_str());
-			PrintUserCmdText(iClientID, L"ERR: Transfer failed");
+			PrintUserCmdText(iClientID, L"错误：转账失败");
 			return true;
 		}
 
 		// If the target player is online then send them a message saying
 		// telling them that they've received the cash.
-		wstring msg = L"You have received " + ToMoneyStr(cash) + L" credits from " + ((bAnon) ? L"anonymous" : wscCharname);
+		wstring msg;
+		if (bAnon)
+			msg += L"您收到匿名的 " + ToMoneyStr(cash) + L" 转账";
+		else
+			msg = L"您收到来自 " + wscCharname + L" 的 " + ToMoneyStr(cash) + L" 转账";
 		if (targetClientId != -1 && !HkIsInCharSelectMenu(targetClientId))
 		{
 			PrintUserCmdText(targetClientId, L"%s", msg.c_str());
@@ -413,7 +417,11 @@ namespace GiveCash
 		// of the transfer. The ini is cleared when ever the character logs in.
 		else
 		{
-			wstring msg = L"You have received " + ToMoneyStr(cash) + L" credits from " + ((bAnon) ? L"anonymous" : wscCharname);
+			wstring msg;
+			if (bAnon)
+				msg += L"您收到匿名的 " + ToMoneyStr(cash) + L" 转账";
+			else
+				msg = L"您收到来自 " + wscCharname + L" 的 " + ToMoneyStr(cash) + L" 转账";
 			LogTransfer(wscTargetCharname, msg);
 		}
 
@@ -423,9 +431,10 @@ namespace GiveCash
 			wstos(wscTargetCharname).c_str(), wstos(HkGetAccountID(HkGetAccountByCharname(wscTargetCharname))).c_str());
 
 		// A friendly message explaining the transfer.
-		msg = L"You have sent " + ToMoneyStr(cash) + L" credits to " + wscTargetCharname;
+		msg = L"您成功将 " + ToMoneyStr(cash) + L" 现金";
 		if (bAnon)
-			msg += L" anonymously";
+			msg += L"匿名地";
+		msg = msg + L"转账给 " + wscTargetCharname; 
 		PrintUserCmdText(iClientID, L"%s", msg.c_str());
 		return true;
 	}
@@ -442,18 +451,18 @@ namespace GiveCash
 
 		if (!wscCode.size())
 		{
-			PrintUserCmdText(iClientID, L"ERR Invalid parameters");
+			PrintUserCmdText(iClientID, L"错误：参数不合法");
 			PrintUserCmdText(iClientID, usage);
 		}
 		else if (wscCode==L"none")
 		{
 			IniWriteW(scFile, "Settings", "Code", L"");
-			PrintUserCmdText(iClientID, L"OK Account code cleared");
+			PrintUserCmdText(iClientID, L"取钱密码清空");
 		}
 		else
 		{
 			IniWriteW(scFile, "Settings", "Code", wscCode);
-			PrintUserCmdText(iClientID, L"OK Account code set to "+wscCode);
+			PrintUserCmdText(iClientID, L"取钱密码设置为 "+wscCode);
 		}
 		return true;
 	}
@@ -473,7 +482,7 @@ namespace GiveCash
 
 		if (!wscTargetCharname.length() || !wscCode.length())
 		{
-			PrintUserCmdText(iClientID, L"ERR Invalid parameters");
+			PrintUserCmdText(iClientID, L"错误：参数不合法");
 			PrintUserCmdText(iClientID, usage);
 			return true;
 		}
@@ -481,7 +490,7 @@ namespace GiveCash
 		CAccount *acc=HkGetAccountByCharname(wscTargetCharname);
 		if (acc==0)
 		{
-			PrintUserCmdText(iClientID, L"ERR char does not exist");
+			PrintUserCmdText(iClientID, L"错误：角色不存在");
 			return true;	
 		}
 
@@ -492,18 +501,18 @@ namespace GiveCash
 		wstring wscTargetCode = IniGetWS(scFile, "Settings", "Code", L"");
 		if (!wscTargetCode.length() || wscTargetCode!=wscCode)
 		{
-			PrintUserCmdText(iClientID, L"ERR cash account access denied");
+			PrintUserCmdText(iClientID, L"错误：密码错误");
 			return true;
 		}
 
 		int iCash = 0;
 		if ((err = HkGetCash(wscTargetCharname, iCash)) != HKE_OK)
 		{
-			PrintUserCmdText(iClientID, L"ERR "+HkErrGetText(err));
+			PrintUserCmdText(iClientID, L"错误： "+HkErrGetText(err));
 			return true;
 		}
 
-		PrintUserCmdText(iClientID, L"OK Account "+wscTargetCharname+L" has " + ToMoneyStr(iCash) + L" credits");
+		PrintUserCmdText(iClientID, L"角色 "+wscTargetCharname+L" 的账户有 " + ToMoneyStr(iCash) + L" 现金");
 		return true;
 	}
 
@@ -527,7 +536,7 @@ namespace GiveCash
 		int cash = ToInt(wscCash);
 		if (!wscTargetCharname.length() || !wscCode.length() || cash<=0)
 		{
-			PrintUserCmdText(iClientID, L"ERR Invalid parameters");
+			PrintUserCmdText(iClientID, L"错误：参数不合法");
 			PrintUserCmdText(iClientID, usage);
 			return true;
 		}
@@ -535,24 +544,24 @@ namespace GiveCash
 		CAccount *iTargetAcc=HkGetAccountByCharname(wscTargetCharname);
 		if (iTargetAcc==0)
 		{
-			PrintUserCmdText(iClientID, L"ERR char does not exist");
+			PrintUserCmdText(iClientID, L"错误：角色不存在");
 			return true;	
 		}
 
 		int secs = 0;
 		if ((err = HkGetOnLineTime(wscTargetCharname, secs)) != HKE_OK) {
-			PrintUserCmdText(iClientID, L"ERR: " + HkErrGetText(err));
+			PrintUserCmdText(iClientID, L"错误：" + HkErrGetText(err));
 			return true;
 		}
 		if (secs<set_iMinTime)
 		{
-			PrintUserCmdText(iClientID, L"ERR insufficient time online");
+			PrintUserCmdText(iClientID, L"错误：在线时间不足");
 			return true;
 		}
 
 		if (InBlockedSystem(wscCharname) || InBlockedSystem(wscTargetCharname) || IsBannedAccount(iTargetAcc))
 		{
-			PrintUserCmdText(iClientID, L"ERR cash transfer blocked");
+			PrintUserCmdText(iClientID, L"错误：转账被禁止");
 			return true;
 		}
 
@@ -563,12 +572,12 @@ namespace GiveCash
 		wstring wscTargetCode = IniGetWS(scFile, "Settings", "Code", L"");
 		if (!wscTargetCode.length() || wscTargetCode!=wscCode)
 		{
-			PrintUserCmdText(iClientID, L"ERR cash account access denied");
+			PrintUserCmdText(iClientID, L"错误：取钱密码错误");
 			return true;
 		}
 
 		if (cash<set_iMinTransfer || cash<0) {
-			PrintUserCmdText(iClientID, L"ERR Transfer too small, minimum transfer "+ToMoneyStr(set_iMinTransfer)+L" credits");
+			PrintUserCmdText(iClientID, L"错误：转账金额过小，最低额度为 "+ToMoneyStr(set_iMinTransfer));
 			return true;
 		}
 
@@ -580,7 +589,7 @@ namespace GiveCash
 		}
 		if (tCash<cash)
 		{
-			PrintUserCmdText(iClientID, L"ERR Insufficient credits");
+			PrintUserCmdText(iClientID, L"现金不足");
 			return true;
 		}
 
@@ -589,12 +598,12 @@ namespace GiveCash
 		float fTargetValue = 0.0f;
 		if ((err = HKGetShipValue(wscCharname, fTargetValue)) != HKE_OK)
 		{
-			PrintUserCmdText(iClientID, L"ERR "+HkErrGetText(err));
+			PrintUserCmdText(iClientID, L"错误："+HkErrGetText(err));
 			return true;
 		}
 		if ((fTargetValue + cash) > 2000000000.0f)
 		{
-			PrintUserCmdText(iClientID, L"ERR Transfer will exceed credit limit");
+			PrintUserCmdText(iClientID, L"错误：转账超出上限");
 			return true;
 		}
 
@@ -602,7 +611,7 @@ namespace GiveCash
 		int iExpectedCash = 0;
 		if ((err = HkGetCash(wscCharname, iExpectedCash)) != HKE_OK)
 		{
-			PrintUserCmdText(iClientID, L"ERR "+HkErrGetText(err));
+			PrintUserCmdText(iClientID, L"错误："+HkErrGetText(err));
 			return true;
 		}
 		iExpectedCash += cash;
@@ -610,7 +619,7 @@ namespace GiveCash
 		// Do an anticheat check on the receiving ship first.
 		if (HkAntiCheat(iClientID) != HKE_OK)
 		{
-			PrintUserCmdText(iClientID, L"ERR Transfer failed");							
+			PrintUserCmdText(iClientID, L"错误：转账失败");	
 			AddLog("NOTICE: Possible cheating when drawing %s credits from %s (%s) to %s (%s)",
 				wstos(ToMoneyStr(cash)).c_str(),
 				wstos(wscTargetCharname).c_str(), wstos(HkGetAccountID(HkGetAccountByCharname(wscTargetCharname))).c_str(),
@@ -625,7 +634,7 @@ namespace GiveCash
 		{
 			if (ClientInfo[iClientID].iTradePartner || ClientInfo[targetClientId].iTradePartner)
 			{
-				PrintUserCmdText(iClientID, L"ERR Trade window open");
+				PrintUserCmdText(iClientID, L"错误：请关闭交易窗口");
 				AddLog("NOTICE: Trade window open when drawing %s credits from %s (%s) to %s (%s) %u %u",
 					wstos(ToMoneyStr(cash)).c_str(),
 					wstos(wscTargetCharname).c_str(), wstos(HkGetAccountID(HkGetAccountByCharname(wscTargetCharname))).c_str(),
@@ -646,7 +655,7 @@ namespace GiveCash
 		{		
 			if (HkAntiCheat(targetClientId) != HKE_OK)
 			{
-				PrintUserCmdText(iClientID, L"ERR Transfer failed");						
+				PrintUserCmdText(iClientID, L"错误：转账失败");						
 				AddLog("NOTICE: Possible cheating when drawing %s credits from %s (%s) to %s (%s)",
 					wstos(ToMoneyStr(cash)).c_str(),
 					wstos(wscTargetCharname).c_str(), wstos(HkGetAccountID(HkGetAccountByCharname(wscTargetCharname))).c_str(),
@@ -659,13 +668,13 @@ namespace GiveCash
 		// Add cash to this player
 		if ((err = HkAddCash(wscCharname, cash)) != HKE_OK)
 		{
-			PrintUserCmdText(iClientID, L"ERR "+HkErrGetText(err));
+			PrintUserCmdText(iClientID, L"错误："+HkErrGetText(err));
 			return true;
 		}
 
 		if (HkAntiCheat(iClientID) != HKE_OK)
 		{
-			PrintUserCmdText(iClientID, L"ERR Transfer failed");			
+			PrintUserCmdText(iClientID, L"错误：转账失败");			
 			AddLog("NOTICE: Possible cheating when drawing %s credits from %s (%s) to %s (%s)",
 				wstos(ToMoneyStr(cash)).c_str(),
 				wstos(wscTargetCharname).c_str(), wstos(HkGetAccountID(HkGetAccountByCharname(wscTargetCharname))).c_str(),
@@ -684,12 +693,12 @@ namespace GiveCash
 					wstos(wscTargetCharname).c_str(), wstos(HkGetAccountID(HkGetAccountByCharname(wscTargetCharname))).c_str(),
 					wstos(wscCharname).c_str(), wstos(HkGetAccountID(HkGetAccountByCharname(wscCharname))).c_str(),
 					wstos(ToMoneyStr(iCurrCash)).c_str(), wstos(ToMoneyStr(iExpectedCash)).c_str());
-			PrintUserCmdText(iClientID, L"ERR Transfer failed");
+			PrintUserCmdText(iClientID, L"错误：转账失败");
 		}
 
 		// If the target player is online then send them a message saying
 		// telling them that they've received transfered cash.
-		wstring msg = L"You have transferred " + ToMoneyStr(cash) + L" credits to " + wscCharname;
+		wstring msg = L"您成功将 " + ToMoneyStr(cash) + L" 现金转账给 " + wscCharname;
 		if (targetClientId!=-1 && !HkIsInCharSelectMenu(targetClientId))
 		{
 			PrintUserCmdText(targetClientId, L"%s", msg.c_str());
@@ -708,7 +717,7 @@ namespace GiveCash
 			wstos(wscCharname).c_str(), wstos(HkGetAccountID(HkGetAccountByCharname(wscCharname))).c_str());
 
 		// A friendly message explaining the transfer.
-		msg = GetTimeString(set_bLocalTime) + L": You have drawn " + ToMoneyStr(cash) + L" credits from " + wscTargetCharname;
+		msg = GetTimeString(set_bLocalTime) + L": 您从 " + wscTargetCharname + L" 取走了 " + ToMoneyStr(cash) + L" 现金";
 		PrintUserCmdText(iClientID, L"%s", msg.c_str());
 		return true;
 	}

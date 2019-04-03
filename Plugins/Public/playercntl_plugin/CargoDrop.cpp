@@ -22,7 +22,7 @@
 
 namespace CargoDrop
 {
-	wstring set_wscDisconnectInSpaceMsg = L"%player is attempting to engage cloaking device";
+	wstring set_wscDisconnectInSpaceMsg = L"%player 与服务器断开连接";
 
 	/// If true report disconnecting players.
 	bool set_bReportDisconnectingPlayers = true;

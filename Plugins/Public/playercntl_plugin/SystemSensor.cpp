@@ -109,7 +109,7 @@ namespace SystemSensor
 		wstring wscMode = ToLower(GetParam(wscParam, ' ', 0));
 		if (wscMode.size()==0)
 		{
-			PrintUserCmdText(iClientID, L"ERR Invalid parameters");
+			PrintUserCmdText(iClientID, L"错误：参数不合法");
 			PrintUserCmdText(iClientID, usage);
 			return true;	
 		}
@@ -162,7 +162,7 @@ namespace SystemSensor
 
 			if (wscTargetCharname.size() == 0)
 			{
-				PrintUserCmdText(iClientID, L"ERR Invalid parameters");
+				PrintUserCmdText(iClientID, L"错误：参数不合法");
 				PrintUserCmdText(iClientID, usage);
 				return true;
 			}

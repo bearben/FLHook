@@ -663,7 +663,7 @@ namespace PlayerCommands
 		}
 		else
 		{
-			PrintUserCmdText(client, L"ERR Invalid parameters");
+			PrintUserCmdText(client, L"错误：参数不合法");
 			PrintUserCmdText(client, L"/base info <paragraph> <command> <text>");
 			PrintUserCmdText(client, L"|  <paragraph> The paragraph number in the range 1-%d", MAX_PARAGRAPHS);
 			PrintUserCmdText(client, L"|  <command> The command to perform on the paragraph, 'a' for append, 'd' for delete");
@@ -812,7 +812,7 @@ namespace PlayerCommands
 		}
 		else
 		{
-			PrintUserCmdText(client, L"ERR Invalid parameters");
+			PrintUserCmdText(client, L"错误：参数不合法");
 			PrintUserCmdText(client, L"/base buildmod [list|construct|destroy]");
 			PrintUserCmdText(client, L"|  list - show modules and build status");
 			PrintUserCmdText(client, L"|  destroy <index> - destroy module at <index>");
@@ -922,7 +922,7 @@ namespace PlayerCommands
 		}
 		else
 		{
-			PrintUserCmdText(client, L"ERR Invalid parameters");
+			PrintUserCmdText(client, L"错误：参数不合法");
 			PrintUserCmdText(client, L"/base facmod [list|clear|add]");
 			PrintUserCmdText(client, L"|  list - show factory modules and build status");
 			PrintUserCmdText(client, L"|  clear <index> - clear build queue for factory module at <index>");
@@ -1034,7 +1034,7 @@ namespace PlayerCommands
 		}
 		else
 		{
-			PrintUserCmdText(client, L"ERR Invalid parameters");
+			PrintUserCmdText(client, L"错误：参数不合法");
 			PrintUserCmdText(client, L"/base defmod [list|set]");
 			PrintUserCmdText(client, L"|  list - show position and orientations of this bases weapons platform");
 			PrintUserCmdText(client, L"|  set - <index> <x> <y> <z> <rx> <ry> <rz> - set the position and orientation of the <index> weapons platform, where x,y,z is the position and rx,ry,rz is the orientation");
@@ -1067,7 +1067,7 @@ namespace PlayerCommands
 		}
 		else
 		{
-			PrintUserCmdText(client, L"ERR Invalid parameters");
+			PrintUserCmdText(client, L"错误：参数不合法");
 			PrintUserCmdText(client, L"/base shieldmod [on|off]");
 			PrintUserCmdText(client, L"|  on - turn the shield on");
 			PrintUserCmdText(client, L"|  off - turn the shield off");
@@ -1163,7 +1163,7 @@ namespace PlayerCommands
 		}
 		else
 		{
-			PrintUserCmdText(client, L"ERR Invalid parameters");
+			PrintUserCmdText(client, L"错误：参数不合法");
 			PrintUserCmdText(client, L"/bank [deposit|withdraw|status] [credits]");
 		}
 	}

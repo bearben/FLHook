@@ -283,7 +283,7 @@ void AP::ClearClientInfo(uint iClientID)
 					wstring wscTargetCharname = GetParam(wscParam, ' ', 0);
 					if (!wscTargetCharname.length())
 					{
-					PrintUserCmdText(iClientID, L"ERR Invalid parameters");
+					PrintUserCmdText(iClientID, L"错误：参数不合法");
 					PrintUserCmdText(iClientID, usage);
 					return true;
 					}

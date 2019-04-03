@@ -95,7 +95,7 @@ namespace Restart
 		wstring wscFaction = GetParam(wscParam, ' ', 0);
 		if (!wscFaction.length())
 		{
-			PrintUserCmdText(iClientID, L"ERR Invalid parameters");
+			PrintUserCmdText(iClientID, L"错误：参数不合法");
 			PrintUserCmdText(iClientID, usage);
 			return true;
 		}

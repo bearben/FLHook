@@ -376,7 +376,7 @@ namespace Message
 		{
 			if (clientData.uTargetClientID == -1)
 			{
-				PrintUserCmdText(iClientID, L"ERR Target not available");
+				PrintUserCmdText(iClientID, L"错误：没有目标");
 				return false;
 			}
 
@@ -593,8 +593,7 @@ namespace Message
 							return false;
 						}
 					}
-					PrintUserCmdText(iClientID, L"This is an automated message.");
-					PrintUserCmdText(iClientID, L"Please do not swear or you may be sanctioned.");
+					PrintUserCmdText(iClientID, L"请文明用语，否则将会受到惩罚。");
 
 					mapInfo[iClientID].iSwearWordWarnings++;
 					if (mapInfo[iClientID].iSwearWordWarnings > 2)
@@ -690,7 +689,7 @@ namespace Message
 
 		if (iMsgSlot<0 || iMsgSlot>9 || wscParam.size()==0)
 		{
-			PrintUserCmdText(iClientID, L"ERR Invalid parameters");
+			PrintUserCmdText(iClientID, L"错误：参数不合法");
 			PrintUserCmdText(iClientID, usage);
 			return true;
 		}
@@ -712,7 +711,7 @@ namespace Message
 		map<uint,INFO>::iterator iter=mapInfo.find(iClientID);
 		if (iter==mapInfo.end())
 		{
-			PrintUserCmdText(iClientID, L"ERR No messages");
+			PrintUserCmdText(iClientID, L"错误：没有消息");
 			return true;
 		}
 
@@ -735,7 +734,7 @@ namespace Message
 
 		if (iCoordMsgSlot<0 || iCoordMsgSlot>9 || wscParam.size()==0)
 		{
-			PrintUserCmdText(iClientID, L"ERR Invalid parameters");
+			PrintUserCmdText(iClientID, L"错误：参数不合法");
 			PrintUserCmdText(iClientID, usage);
 			return true;
 		}
@@ -757,7 +756,7 @@ namespace Message
 		map<uint,INFO>::iterator iter=mapCoordsInfo.find(iClientID);
 		if (iter==mapCoordsInfo.end())
 		{
-			PrintUserCmdText(iClientID, L"ERR No coordinates");
+			PrintUserCmdText(iClientID, L"错误：没有坐标");
 			return true;
 		}
 
@@ -778,7 +777,7 @@ namespace Message
 		int iCoordMsgSlot = ToInt(wscCmd.substr(2,1));
 		if (iCoordMsgSlot<0 || iCoordMsgSlot>9)
 		{
-			PrintUserCmdText(iClientID, L"ERR Invalid parameters");
+			PrintUserCmdText(iClientID, L"错误：参数不合法");
 			PrintUserCmdText(iClientID, usage);
 			return true;
 		}
@@ -786,7 +785,7 @@ namespace Message
 		map<uint,INFO>::iterator iter=mapCoordsInfo.find(iClientID);
 		if (iter==mapCoordsInfo.end())
 		{
-			PrintUserCmdText(iClientID, L"ERR No coordinates");
+			PrintUserCmdText(iClientID, L"错误：没有坐标");
 			return true;
 		}
 
@@ -808,7 +807,7 @@ namespace Message
 
 		if (wscMsg.size() == 0)
 		{
-			PrintUserCmdText(iClientID, L"ERR Invalid parameters");
+			PrintUserCmdText(iClientID, L"错误：参数不合法");
 			PrintUserCmdText(iClientID, usage);
 			return true;
 		}
@@ -827,7 +826,7 @@ namespace Message
 		int iMsgSlot = ToInt(wscCmd.substr(2,1));
 		if (iMsgSlot<0 || iMsgSlot>9)
 		{
-			PrintUserCmdText(iClientID, L"ERR Invalid parameters");
+			PrintUserCmdText(iClientID, L"错误：参数不合法");
 			PrintUserCmdText(iClientID, usage);
 			return true;
 		}
@@ -835,7 +834,7 @@ namespace Message
 		map<uint,INFO>::iterator iter=mapInfo.find(iClientID);
 		if (iter==mapInfo.end() || iter->second.slot[iMsgSlot].size()==0)
 		{
-			PrintUserCmdText(iClientID, L"ERR No message defined");
+			PrintUserCmdText(iClientID, L"错误：没有预置喊话");
 			return true;
 		}
 
@@ -859,7 +858,7 @@ namespace Message
 		int iMsgSlot = ToInt(wscCmd.substr(1,1));
 		if (iMsgSlot<0 || iMsgSlot>9)
 		{
-			PrintUserCmdText(iClientID, L"ERR Invalid parameters");
+			PrintUserCmdText(iClientID, L"错误：参数不合法");
 			PrintUserCmdText(iClientID, usage);
 			return true;
 		}
@@ -867,7 +866,7 @@ namespace Message
 		map<uint,INFO>::iterator iter=mapInfo.find(iClientID);
 		if (iter==mapInfo.end() || iter->second.slot[iMsgSlot].size()==0)
 		{
-			PrintUserCmdText(iClientID, L"ERR No message defined");
+			PrintUserCmdText(iClientID, L"错误：没有预置喊话");
 			return true;
 		}
 
@@ -890,7 +889,7 @@ namespace Message
 
 		if (wscMsg.size() == 0)
 		{
-			PrintUserCmdText(iClientID, L"ERR Invalid parameters");
+			PrintUserCmdText(iClientID, L"错误：参数不合法");
 			PrintUserCmdText(iClientID, usage);
 			return true;
 		}
@@ -909,7 +908,7 @@ namespace Message
 		int iMsgSlot = ToInt(wscCmd.substr(2,1));
 		if (iMsgSlot<0 || iMsgSlot>9)
 		{
-			PrintUserCmdText(iClientID, L"ERR Invalid parameters");
+			PrintUserCmdText(iClientID, L"错误：参数不合法");
 			PrintUserCmdText(iClientID, usage);
 			return true;
 		}
@@ -917,7 +916,7 @@ namespace Message
 		map<uint,INFO>::iterator iter=mapInfo.find(iClientID);
 		if (iter==mapInfo.end() || iter->second.slot[iMsgSlot].size()==0)
 		{
-			PrintUserCmdText(iClientID, L"ERR No message defined");
+			PrintUserCmdText(iClientID, L"错误：没有预置喊话");
 			return true;
 		}
 
@@ -940,7 +939,7 @@ namespace Message
 
 		if (wscMsg.size() == 0)
 		{
-			PrintUserCmdText(iClientID, L"ERR Invalid parameters");
+			PrintUserCmdText(iClientID, L"错误：参数不合法");
 			PrintUserCmdText(iClientID, usage);
 			return true;
 		}
@@ -959,7 +958,7 @@ namespace Message
 		int iMsgSlot = ToInt(wscCmd.substr(2,1));
 		if (iMsgSlot<0 || iMsgSlot>9)
 		{
-			PrintUserCmdText(iClientID, L"ERR Invalid parameters");
+			PrintUserCmdText(iClientID, L"错误：参数不合法");
 			PrintUserCmdText(iClientID, usage);
 			return true;
 		}
@@ -967,7 +966,7 @@ namespace Message
 		map<uint,INFO>::iterator iter=mapInfo.find(iClientID);
 		if (iter==mapInfo.end() || iter->second.slot[iMsgSlot].size()==0)
 		{
-			PrintUserCmdText(iClientID, L"ERR No message defined");
+			PrintUserCmdText(iClientID, L"错误：没有预置喊话");
 			return true;
 		}
 
@@ -990,7 +989,7 @@ namespace Message
 
 		if (wscMsg.size() == 0)
 		{
-			PrintUserCmdText(iClientID, L"ERR Invalid parameters");
+			PrintUserCmdText(iClientID, L"错误：参数不合法");
 			PrintUserCmdText(iClientID, usage);
 			return true;
 		}
@@ -1007,7 +1006,7 @@ namespace Message
 		if (iter==mapInfo.end())
 		{
 			// There's no way for this to happen! yeah right.
-			PrintUserCmdText(iClientID, L"ERR No message defined");
+			PrintUserCmdText(iClientID, L"错误：没有预置喊话");
 			return true;
 		}
 
@@ -1019,13 +1018,13 @@ namespace Message
 			int iMsgSlot = ToInt(wscCmd.substr(2,1));
 			if (iMsgSlot<0 || iMsgSlot>9)
 			{
-				PrintUserCmdText(iClientID, L"ERR Invalid parameters");
+				PrintUserCmdText(iClientID, L"错误：参数不合法");
 				PrintUserCmdText(iClientID, usage);
 				return true;
 			}
 			if (iter->second.slot[iMsgSlot].size()==0)
 			{
-				PrintUserCmdText(iClientID, L"ERR No message defined");
+				PrintUserCmdText(iClientID, L"错误：没有预置喊话");
 				return true;
 			}
 			// Replace the tag #t with name of the targeted player.
@@ -1035,14 +1034,14 @@ namespace Message
 		}
 		else if (wscMsg.size()==0)
 		{
-			PrintUserCmdText(iClientID, L"ERR Invalid parameters");
+			PrintUserCmdText(iClientID, L"错误：参数不合法");
 			PrintUserCmdText(iClientID, usage);
 			return true;
 		}
 
 		if (iter->second.ulastPmClientID==-1)
 		{
-			PrintUserCmdText(iClientID, L"ERR PM sender not available");
+			PrintUserCmdText(iClientID, L"错误：找不到发送密聊的玩家");
 			return true;
 		}
 
@@ -1059,7 +1058,7 @@ namespace Message
 		if (iter==mapInfo.end())
 		{
 			// There's no way for this to happen! yeah right.
-			PrintUserCmdText(iClientID, L"ERR No message defined");
+			PrintUserCmdText(iClientID, L"错误：没有预置喊话");
 			return true;
 		}
 
@@ -1071,13 +1070,13 @@ namespace Message
 			int iMsgSlot = ToInt(wscCmd.substr(2,1));
 			if (iMsgSlot<0 || iMsgSlot>9)
 			{
-				PrintUserCmdText(iClientID, L"ERR Invalid parameters");
+				PrintUserCmdText(iClientID, L"错误：参数不合法");
 				PrintUserCmdText(iClientID, usage);
 				return true;
 			}
 			if (iter->second.slot[iMsgSlot].size()==0)
 			{
-				PrintUserCmdText(iClientID, L"ERR No message defined");
+				PrintUserCmdText(iClientID, L"错误：没有预置喊话");
 				return true;
 			}
 			// Replace the tag #t with name of the targeted player.
@@ -1087,14 +1086,14 @@ namespace Message
 		}
 		else if (wscMsg.size()==0)
 		{
-			PrintUserCmdText(iClientID, L"ERR Invalid parameters");
+			PrintUserCmdText(iClientID, L"错误：参数不合法");
 			PrintUserCmdText(iClientID, usage);
 			return true;
 		}
 
 		if (iter->second.uTargetClientID==-1)
 		{
-			PrintUserCmdText(iClientID, L"ERR PM target not available");
+			PrintUserCmdText(iClientID, L"错误：找不到发送密聊的玩家");
 			return true;
 		}
 
@@ -1111,7 +1110,7 @@ namespace Message
 		if (iter==mapInfo.end())
 		{
 			// There's no way for this to happen! yeah right.
-			PrintUserCmdText(iClientID, L"ERR No message defined");
+			PrintUserCmdText(iClientID, L"错误：没有预置喊话");
 			return true;
 		}
 
@@ -1137,14 +1136,14 @@ namespace Message
 
 		if (wscCharname.size()==0 || wscMsg.size()==0)
 		{
-			PrintUserCmdText(iClientID, L"ERR Invalid parameters");
+			PrintUserCmdText(iClientID, L"错误：参数不合法");
 			PrintUserCmdText(iClientID, usage);
 			return true;	
 		}
 
 		if (!HkGetAccountByCharname(wscTargetCharname))
 		{
-			PrintUserCmdText(iClientID, L"ERR charname does not exist");
+			PrintUserCmdText(iClientID, L"错误：角色名不存在");
 			return true;
 		}
 
@@ -1153,7 +1152,7 @@ namespace Message
 		{
 			Mail::MailSend(wscTargetCharname, MSG_LOG, wscCharname+L": "+wscMsg);
 			Mail::MailCheckLog(wscTargetCharname, MSG_LOG);
-			PrintUserCmdText(iClientID, L"OK message saved to mailbox");
+			PrintUserCmdText(iClientID, L"消息已保存至邮箱");
 		}
 		else
 		{
@@ -1174,7 +1173,7 @@ namespace Message
 		uint iToClientID = ToInt(wscClientID);
 		if(!HkIsValidClientID(iToClientID) || HkIsInCharSelectMenu(iToClientID))
 		{
-			PrintUserCmdText(iClientID, L"ERR Invalid client-id");
+			PrintUserCmdText(iClientID, L"错误：client-id不合法");
 			return true;
 		}
 
@@ -1192,7 +1191,7 @@ namespace Message
 
 		if (wscCharnamePrefix.size()<3 || wscMsg.size()==0)
 		{
-			PrintUserCmdText(iClientID, L"ERR Invalid parameters");
+			PrintUserCmdText(iClientID, L"错误：参数不合法");
 			PrintUserCmdText(iClientID, usage);
 			return true;		
 		}
@@ -1215,7 +1214,7 @@ namespace Message
 			FormatSendChat(iClientID, wscSender, wscMsg, L"00CCFF", L"[势力]");
 
 		if (bMsgSent==false)
-			PrintUserCmdText(iClientID, L"ERR No chars found");
+			PrintUserCmdText(iClientID, L"错误：没有找到玩家");
 		return true;
 	}
 
@@ -1225,21 +1224,21 @@ namespace Message
 
 		if (wscTargetCharname.size() == 0)
 		{
-			PrintUserCmdText(iClientID, L"ERR Invalid parameters");
+			PrintUserCmdText(iClientID, L"错误：参数不合法");
 			PrintUserCmdText(iClientID, usage);
 			return true;
 		}
 
 		if (!HkGetAccountByCharname(wscTargetCharname))
 		{
-			PrintUserCmdText(iClientID, L"ERR charname does not exist");
+			PrintUserCmdText(iClientID, L"错误：角色名不存在");
 			return true;
 		}
 
 		uint iToClientID = HkGetClientIdFromCharname(wscTargetCharname);
 		if (iToClientID == -1)
 		{
-			PrintUserCmdText(iClientID, L"ERR character is offline");
+			PrintUserCmdText(iClientID, L"错误：角色不在线");
 			return true;
 		}
 		else
@@ -1249,7 +1248,7 @@ namespace Message
 			uint iRet;
 			if (!HKHKSUCCESS(HkFMsgEncodeXML(wscXML, szBuf, sizeof(szBuf), iRet)))
 			{
-				PrintUserCmdText(iClientID, L"Error: Could not encode XML");
+				PrintUserCmdText(iClientID, L"错误：无法编码至XML");
 				return true;
 			}
 
@@ -1274,7 +1273,7 @@ namespace Message
 
 		if (wscCharnamePrefix.size()<3)
 		{
-			PrintUserCmdText(iClientID, L"ERR Invalid parameters");
+			PrintUserCmdText(iClientID, L"错误：参数不合法");
 			PrintUserCmdText(iClientID, usage);
 			return true;	
 		}
@@ -1292,7 +1291,7 @@ namespace Message
 			uint iRet;
 			if (!HKHKSUCCESS(HkFMsgEncodeXML(wscXML, szBuf, sizeof(szBuf), iRet)))
 			{
-				PrintUserCmdText(iClientID, L"Error: Could not encode XML");
+				PrintUserCmdText(iClientID, L"错误：无法编码至XML");
 				return true;
 			}
 
@@ -1306,7 +1305,7 @@ namespace Message
 		}
 
 		if (msgSent==false)
-			PrintUserCmdText(iClientID, L"ERR No chars found");
+			PrintUserCmdText(iClientID, L"错误：没有找到玩家");
 
 		return true;
 	}
@@ -1321,7 +1320,7 @@ namespace Message
 			bShowChatTime = false;
 		else 
 		{
-			PrintUserCmdText(iClientID, L"ERR Invalid parameters");
+			PrintUserCmdText(iClientID, L"错误：参数不合法");
 			PrintUserCmdText(iClientID, usage);
 		}
 
@@ -1349,7 +1348,7 @@ namespace Message
 			bShowChatDieTime = false;
 		else
 		{
-			PrintUserCmdText(iClientID, L"ERR Invalid parameters");
+			PrintUserCmdText(iClientID, L"错误：参数不合法");
 			PrintUserCmdText(iClientID, usage);
 			return true;
 		}
@@ -1416,7 +1415,7 @@ namespace Message
 	{
 		if (wscParam.size()==0)
 		{
-			PrintUserCmdText(iClientID, L"ERR Invalid parameters");
+			PrintUserCmdText(iClientID, L"错误：参数不合法");
 			PrintUserCmdText(iClientID, usage);
 			return true;
 		}
@@ -1430,7 +1429,7 @@ namespace Message
 		int iNumberMsgs = Mail::MailCount((const wchar_t*) Players.GetActiveCharacterName(iClientID), MSG_LOG);
 		if (iNumberMsgs==0)
 		{
-			PrintUserCmdText(iClientID, L"OK You have no messages");
+			PrintUserCmdText(iClientID, L"当前没有消息");
 			return true;
 		}
 
@@ -1438,16 +1437,16 @@ namespace Message
 		if (iFirstMsg==0)
 		{
 			if (iNumberUnreadMsgs>0)
-				PrintUserCmdText(iClientID, L"OK You have %d unread messages", iNumberUnreadMsgs);
+				PrintUserCmdText(iClientID, L"您有 %d 个未读消息", iNumberUnreadMsgs);
 			else
-				PrintUserCmdText(iClientID, L"OK You have %d messages", iNumberMsgs);
-			PrintUserCmdText(iClientID, L"Type /mail 1 to see first message or /mail <num> to see specified message");
+				PrintUserCmdText(iClientID, L"您有 %d 个消息", iNumberMsgs);
+			PrintUserCmdText(iClientID, L"输入/mail 1来查看第一个消息，或输入/mail <num>来查看指定消息");
 			return true;
 		}
 
 		if (iFirstMsg>iNumberMsgs)
 		{
-			PrintUserCmdText(iClientID, L"ERR Message does not exist");
+			PrintUserCmdText(iClientID, L"错误：消息不存在");
 			return true;
 		}
 
@@ -1460,7 +1459,7 @@ namespace Message
 	{
 		if (wscParam.size()==0)
 		{
-			PrintUserCmdText(iClientID, L"ERR Invalid parameters");
+			PrintUserCmdText(iClientID, L"错误：参数不合法");
 			PrintUserCmdText(iClientID, usage);
 			return true;
 		}
@@ -1469,14 +1468,14 @@ namespace Message
 		int iMsg = ToInt(ToLower(GetParam(wscParam, ' ', 0)));
 		if (iMsg==0 || iMsg>iNumberMsgs)
 		{
-			PrintUserCmdText(iClientID, L"ERR Message does not exist");
+			PrintUserCmdText(iClientID, L"错误：消息不存在");
 			return true;
 		}
 
 		if (Mail::MailDel((const wchar_t*) Players.GetActiveCharacterName(iClientID), MSG_LOG, iMsg))
 			PrintUserCmdText(iClientID, L"OK");
 		else
-			PrintUserCmdText(iClientID, L"ERR");
+			PrintUserCmdText(iClientID, L"错误");
 		return true;
 	}
 
