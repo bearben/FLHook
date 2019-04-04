@@ -47,7 +47,7 @@ namespace Mail
 			IniWrite(scFilePath, "MsgsRead", itos(iMsgSlot), "yes");
 			iLastMsg = iMsgSlot;
 		}
-		PrintUserCmdText(iClientID, L"Viewing #%02d-#%02d of %02d messages", iFirstMsg, iLastMsg, MailCount(wscCharname, scExtension));
+		PrintUserCmdText(iClientID, L"查看第 #%02d-#%02d 条消息（共 %02d 条）", iFirstMsg, iLastMsg, MailCount(wscCharname, scExtension));
 	}
 
 	/** Return the number of unread messages. */
@@ -105,7 +105,7 @@ namespace Mail
 		int iUnreadMsgs = MailCountUnread(wscCharname, scExtension);
 		if (iUnreadMsgs>0)
 		{
-			PrintUserCmdText(iClientID, L"You have %d unread messages. Type /mail to see your messages", iUnreadMsgs);
+			PrintUserCmdText(iClientID, L"您有 %d 条未读消息，请输入/mail指令查看。", iUnreadMsgs);
 		}
 	}
 

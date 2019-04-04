@@ -218,7 +218,7 @@ namespace Rename
 			pub::Player::GetBase(iClientID, iBaseID);
 			if (!iBaseID)
 			{
-				PrintUserCmdText(iClientID, L"ERR Not in base");
+				PrintUserCmdText(iClientID, L"错误：不在空间站里");
 				return true;
 			}
 
@@ -228,21 +228,21 @@ namespace Rename
 
 			if (tag.size() < MIN_CHAR_TAG_LEN)
 			{
-				PrintUserCmdText(iClientID, L"ERR Tag too short");
+				PrintUserCmdText(iClientID, L"错误：Tag名称太短");
 				PrintUserCmdText(iClientID, usage);
 				return true;
 			}
 
 			if (!pass.size())
 			{
-				PrintUserCmdText(iClientID, L"ERR Password not set");
+				PrintUserCmdText(iClientID, L"错误：没有设置密码");
 				PrintUserCmdText(iClientID, usage);
 				return true;
 			}
 
 			if (!description.size())
 			{
-				PrintUserCmdText(iClientID, L"ERR Description not set");
+				PrintUserCmdText(iClientID, L"错误：没有设置描述内容");
 				PrintUserCmdText(iClientID, usage);
 				return true;
 			}
@@ -252,7 +252,7 @@ namespace Rename
 			{
 				if (tag.find(i->second.tag)==0 || i->second.tag.find(tag)==0)
 				{
-					PrintUserCmdText(iClientID, L"ERR Tag already exists or conflicts with existing tag");
+					PrintUserCmdText(iClientID, L"错误：Tag已存在或与另一已存在的Tag冲突");
 					return true;
 				}
 			}
@@ -267,12 +267,12 @@ namespace Rename
 			HK_ERROR err;
 			if ((err = HkGetCash(wscCharname, iCash)) != HKE_OK)
 			{
-				PrintUserCmdText(iClientID, L"ERR "+HkErrGetText(err));
+				PrintUserCmdText(iClientID, L"错误："+HkErrGetText(err));
 				return true;
 			}
 			if (set_iMakeTagCost>0 && iCash<set_iMakeTagCost)
 			{
-				PrintUserCmdText(iClientID, L"ERR Insufficient credits");
+				PrintUserCmdText(iClientID, L"错误：现金不足");
 				return true;
 			}
 
@@ -285,7 +285,7 @@ namespace Rename
 			mapTagToPassword[tag].last_access = (uint)time(0);
 			mapTagToPassword[tag].description = description;
 
-			PrintUserCmdText(iClientID, L"Created faction tag %s with master password %s", tag.c_str(), pass.c_str());
+			PrintUserCmdText(iClientID, L"成功创建势力Tag %s 密码为 %s", tag.c_str(), pass.c_str());
 			AddLog("NOTICE: Tag %s created by %s (%s)", wstos(tag).c_str(), wstos(wscCharname).c_str(), wstos(HkGetAccountIDByClientID(iClientID)).c_str());
 			SaveSettings();
 			return true;
@@ -317,13 +317,13 @@ namespace Rename
 				{
 					mapTagToPassword.erase(tag);
 					SaveSettings();
-					PrintUserCmdText(iClientID, L"OK Tag dropped");
+					PrintUserCmdText(iClientID, L"OK，Tag已删除");
 					AddLog("NOTICE: Tag %s dropped by %s (%s)", wstos(tag).c_str(), wstos(wscCharname).c_str(), wstos(HkGetAccountIDByClientID(iClientID)).c_str());
 					return true;
 				}
 			}
 
-			PrintUserCmdText(iClientID, L"ERR tag or master password are invalid");
+			PrintUserCmdText(iClientID, L"错误：输入的Tag或密码不合法");
 			return true;
 		}
 		return false;
@@ -354,11 +354,11 @@ namespace Rename
 				{
 					i->second.rename_password = rename_password;
 					SaveSettings();
-					PrintUserCmdText(iClientID, L"OK Created rename password %s for tag %s", rename_password.c_str(), tag.c_str());
+					PrintUserCmdText(iClientID, L"设置Tag %s 的改名密码为 %s", tag.c_str(), rename_password.c_str());
 					return true;
 				}
 			}
-			PrintUserCmdText(iClientID, L"ERR tag or master password are invalid");
+			PrintUserCmdText(iClientID, L"错误：输入的Tag或密码不合法");
 			return true;
 		}
 		return false;
@@ -541,7 +541,7 @@ namespace Rename
 		pub::Player::GetBase(iClientID, iBaseID);
 		if (!iBaseID)
 		{
-			PrintUserCmdText(iClientID, L"ERR Not in base");
+			PrintUserCmdText(iClientID, L"错误：不在空间站里");
 			return true;
 		}
 
@@ -554,7 +554,7 @@ namespace Rename
 
 		if (MapLockedShips.count(ToLower(wscCharname)) && MapLockedShips[ToLower(wscCharname)].LockLevel > 0)
 		{
-			PrintUserCmdText(iClientID, L"ERR This ship is locked. The FBI has been notified.");
+			PrintUserCmdText(iClientID, L"错误：飞船已被锁定。");
 			wstring spurdoip;
 			HkGetPlayerIP(iClientID, spurdoip);
 			AddLog("SHIPLOCK: Attempt to rename locked ship %s from IP %s", wstos(wscCharname).c_str(), wstos(spurdoip).c_str());
@@ -564,25 +564,25 @@ namespace Rename
 
 		if (wscNewCharname.find(L" ")!=-1)
 		{
-			PrintUserCmdText(iClientID, L"ERR Space characters not allowed in name");
+			PrintUserCmdText(iClientID, L"错误：名字中不能包含空格");
 			return true;
 		}
 
 		if (HkGetAccountByCharname(wscNewCharname))
 		{
-			PrintUserCmdText(iClientID, L"ERR Name already exists");	
+			PrintUserCmdText(iClientID, L"错误：名字已存在");
 			return true;
 		}
 
 		if (wscNewCharname.length() > 23)
 		{
-			PrintUserCmdText(iClientID, L"ERR Name to long");	
+			PrintUserCmdText(iClientID, L"错误：名字太长");
 			return true;
 		}
 		
 		if (wscNewCharname.length() < MIN_CHAR_TAG_LEN)
 		{
-			PrintUserCmdText(iClientID, L"ERR Name to short");	
+			PrintUserCmdText(iClientID, L"错误：名字太短");
 			return true;
 		}
 
@@ -597,13 +597,13 @@ namespace Rename
 				{
 					if (!wscPassword.length())
 					{
-						PrintUserCmdText(iClientID, L"ERR Name starts with an owned tag. Password is required.");	
+						PrintUserCmdText(iClientID, L"错误：名字开头包含一个已被注册的Tag，请输入密码。");	
 						return true;
 					}
 					else if (wscPassword != i->second.master_password
 						&& wscPassword != i->second.rename_password)
 					{
-						PrintUserCmdText(iClientID, L"ERR Name starts with an owned tag. Password is wrong.");	
+						PrintUserCmdText(iClientID, L"错误：名字开头包含一个已被注册的Tag，密码错误。");
 						return true;
 					}
 					// Password is valid for owned tag.
@@ -623,12 +623,12 @@ namespace Rename
 		int iCash = 0;
 		if ((err = HkGetCash(wscCharname, iCash)) != HKE_OK)
 		{
-			PrintUserCmdText(iClientID, L"ERR "+HkErrGetText(err));
+			PrintUserCmdText(iClientID, L"错误："+HkErrGetText(err));
 			return true;
 		}
 		if (set_iRenameCost>0 && iCash<set_iRenameCost)
 		{
-			PrintUserCmdText(iClientID, L"ERR Insufficient credits");
+			PrintUserCmdText(iClientID, L"错误：现金不足");
 			return true;
 		}
 
@@ -636,7 +636,7 @@ namespace Rename
 		wstring wscDir;
 		if ((err = HkGetAccountDirName(wscCharname, wscDir))!=HKE_OK)
 		{
-			PrintUserCmdText(iClientID, L"ERR "+HkErrGetText(err));
+			PrintUserCmdText(iClientID, L"错误："+HkErrGetText(err));
 			return true;
 		}
 		string scRenameFile  = scAcctPath + wstos(wscDir) + "\\" + "rename.ini";
@@ -649,7 +649,7 @@ namespace Rename
 		{
 			if ((lastRenameTime + set_iRenameTimeLimit) > (int)time(0))
 			{
-				PrintUserCmdText(iClientID, L"ERR Rename time limit");
+				PrintUserCmdText(iClientID, L"错误：未到重命名时限");
 				return true;
 			}
 		}
@@ -661,13 +661,13 @@ namespace Rename
 		wstring wscSourceFile;
 		if ((err = HkGetCharFileName(wscCharname, wscSourceFile))!=HKE_OK)
 		{
-			PrintUserCmdText(iClientID, L"ERR "+HkErrGetText(err));
+			PrintUserCmdText(iClientID, L"错误："+HkErrGetText(err));
 			return true;
 		}
 		wstring wscDestFile;
 		if ((err = HkGetCharFileName(wscNewCharname, wscDestFile))!=HKE_OK)
 		{
-			PrintUserCmdText(iClientID, L"ERR "+HkErrGetText(err));
+			PrintUserCmdText(iClientID, L"错误："+HkErrGetText(err));
 			return true;
 		}
 
@@ -684,7 +684,7 @@ namespace Rename
 		o.scDestFileTemp = scAcctPath + wstos(wscDir) + "\\" + wstos(wscSourceFile) + ".fl.renaming";
 		pendingRenames.push_back(o);
 		
-		HkKickReason(o.wscCharname, L"Updating character, please wait 10 seconds before reconnecting");
+		HkKickReason(o.wscCharname, L"更新角色中，请等待 10 秒钟后重新登录");
 		IniWrite(scRenameFile, "General", wstos(o.wscNewCharname), itos((int)time(0)));
 		return true;
 	}
@@ -707,7 +707,7 @@ namespace Rename
 		string scFile;
 		if (!GetUserFilePath(scFile, wscCharname, "-movechar.ini"))
 		{
-			PrintUserCmdText(iClientID, L"ERR Character does not exist");
+			PrintUserCmdText(iClientID, L"错误：角色不存在");
 			return true;
 		}
 
@@ -715,12 +715,12 @@ namespace Rename
 		if (wscCode==L"none")
 		{
 			IniWriteW(scFile, "Settings", "Code", L"");
-			PrintUserCmdText(iClientID, L"OK Movechar code cleared");
+			PrintUserCmdText(iClientID, L"转移角色密码已清空");
 		}
 		else
 		{
 			IniWriteW(scFile, "Settings", "Code", wscCode);
-			PrintUserCmdText(iClientID, L"OK Movechar code set to "+wscCode);
+			PrintUserCmdText(iClientID, L"转移角色密码已设置为 "+wscCode);
 		}
 		return true;
 	}
@@ -769,7 +769,7 @@ namespace Rename
 		pub::Player::GetBase(iClientID, iBaseID);
 		if (!iBaseID)
 		{
-			PrintUserCmdText(iClientID, L"ERR Not in base");
+			PrintUserCmdText(iClientID, L"错误：不在空间站里");
 			return true;
 		}
 
@@ -779,7 +779,7 @@ namespace Rename
 		wstring wscMovingCharnameLower = ToLower(wscMovingCharname);
 		if (!GetUserFilePath(scFile, wscMovingCharname, "-movechar.ini"))
 		{
-			PrintUserCmdText(iClientID, L"ERR Character does not exist");
+			PrintUserCmdText(iClientID, L"错误：角色不存在");
 			return true;
 		}
 		
@@ -788,7 +788,7 @@ namespace Rename
 		wstring wscTargetCode = IniGetWS(scFile, "Settings", "Code", L"");
 		if (!wscTargetCode.length() || wscTargetCode!=wscCode)
 		{
-			PrintUserCmdText(iClientID, L"ERR Move character access denied");
+			PrintUserCmdText(iClientID, L"错误：转移角色失败，密码错误");
 			return true;
 		}
 
@@ -796,7 +796,7 @@ namespace Rename
 		wstring wscCharname = (const wchar_t*)Players.GetActiveCharacterName(iClientID);
 
 		if (MapLockedShips.count(wscMovingCharnameLower) && MapLockedShips[wscMovingCharnameLower].LockLevel > 0) {
-			PrintUserCmdText(iClientID, L"ERR This ship is locked. The FBI has been notified.");
+			PrintUserCmdText(iClientID, L"错误：飞船已被锁定。");
 			wstring spurdoip;
 			HkGetPlayerIP(iClientID, spurdoip);
 			AddLog("SHIPLOCK: Attempt to movechar locked ship %s from IP %s", wstos(wscMovingCharname).c_str(), wstos(spurdoip).c_str());
@@ -807,7 +807,7 @@ namespace Rename
 		// Prevent ships from banned accounts from being moved.
 		if (IsBanned(wscMovingCharname))
 		{
-			PrintUserCmdText(iClientID, L"ERR not permitted");
+			PrintUserCmdText(iClientID, L"错误：禁止转移被封禁账号的角色");
 			return true;
 		}
 		// Saving the characters forces an anti-cheat checks and fixes 
@@ -820,12 +820,12 @@ namespace Rename
 		int iCash = 0;
 		if ((err = HkGetCash(wscCharname, iCash)) != HKE_OK)
 		{
-			PrintUserCmdText(iClientID, L"ERR "+HkErrGetText(err));
+			PrintUserCmdText(iClientID, L"错误："+HkErrGetText(err));
 			return true;
 		}
 		if (set_iMoveCost>0 && iCash<set_iMoveCost)
 		{
-			PrintUserCmdText(iClientID, L"ERR Insufficient credits");
+			PrintUserCmdText(iClientID, L"错误：现金不足");
 			return true;
 		}
 
@@ -833,7 +833,7 @@ namespace Rename
 		CAccount *acc=Players.FindAccountFromClientID(iClientID);
 		if (acc->iNumberOfCharacters >= 7)
 		{
-			PrintUserCmdText(iClientID, L"ERR Too many characters in account");
+			PrintUserCmdText(iClientID, L"错误：账号中的角色过多");
 			return true;
 		}
 
@@ -847,17 +847,17 @@ namespace Rename
 		wstring wscSourceFile;
 		if ((err = HkGetAccountDirName(wscCharname, wscDir))!=HKE_OK)
 		{
-			PrintUserCmdText(iClientID, L"ERR "+HkErrGetText(err));
+			PrintUserCmdText(iClientID, L"错误："+HkErrGetText(err));
 			return true;
 		}
 		if ((err = HkGetAccountDirName(wscMovingCharname, wscSourceDir))!=HKE_OK)
 		{
-			PrintUserCmdText(iClientID, L"ERR "+HkErrGetText(err));
+			PrintUserCmdText(iClientID, L"错误："+HkErrGetText(err));
 			return true;
 		}
 		if ((err = HkGetCharFileName(wscMovingCharname, wscSourceFile))!=HKE_OK)
 		{
-			PrintUserCmdText(iClientID, L"ERR "+HkErrGetText(err));
+			PrintUserCmdText(iClientID, L"错误："+HkErrGetText(err));
 			return true;
 		}
 
@@ -879,8 +879,8 @@ namespace Rename
 		::DeleteFileA(scFile.c_str());
 
 		// Kick
-		HkKickReason(o.wscDestinationCharname, L"Moving character, please wait 10 seconds before reconnecting");
-		HkKickReason(o.wscMovingCharname, L"Moving character, please wait 10 seconds before reconnecting");
+		HkKickReason(o.wscDestinationCharname, L"转移角色中，请等待 10 秒钟后重新登录");
+		HkKickReason(o.wscMovingCharname, L"转移角色中，请等待 10 秒钟后重新登录");
 		return true;
 	}
 
@@ -1095,7 +1095,7 @@ bool Rename::DestroyCharacter(struct CHARACTER_ID const &cId, unsigned int iClie
 	{
 		if ((i->second.AccountName == file) && (i->second.LockLevel > 0))
 		{
-			PrintUserCmdText(iClientID, L"ERR This ship is locked. The FBI has been notified.");
+			PrintUserCmdText(iClientID, L"错误：飞船已被锁定。");
 			wstring spurdoip;
 			HkGetPlayerIP(iClientID, spurdoip);
 			AddLog("SHIPLOCK: Attempt to delete locked ship %s from IP %s", wstos(i->first).c_str(), wstos(spurdoip).c_str());

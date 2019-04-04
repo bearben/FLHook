@@ -411,7 +411,7 @@ namespace Message
 		set_wscCmdEchoStyle = stows(IniGetS(scPluginCfgFile, "Message", "CmdEchoStyle", "0x00AA0090"));
 		set_iStandardBannerTimeout = IniGetI(scPluginCfgFile, "Message", "StandardBannerDelay", 5);
 		set_iSpecialBannerTimeout = IniGetI(scPluginCfgFile, "Message", "SpecialBannerDelay", 60);
-		set_wscDisconnectSwearingInSpaceMsg = stows(IniGetS(scPluginCfgFile, "Message", "DisconnectSwearingInSpaceMsg", "%player has been kicked for swearing"));
+		set_wscDisconnectSwearingInSpaceMsg = stows(IniGetS(scPluginCfgFile, "Message", "DisconnectSwearingInSpaceMsg", "%player 因不文明用语被踢出服务器"));
 		set_fDisconnectSwearingInSpaceRange = IniGetF(scPluginCfgFile, "Message", "DisconnectSwearingInSpaceRange", 5000.0f);
 		set_bSetMsg = IniGetB(scPluginCfgFile, "Message", "SetMsg", false);
 
@@ -1122,7 +1122,7 @@ namespace Message
 		if (iter->second.uTargetClientID!=-1 && HkIsValidClientID(iter->second.uTargetClientID))
 			wscTargetCharname = (const wchar_t*) Players.GetActiveCharacterName(iter->second.uTargetClientID);
 
-		PrintUserCmdText(iClientID, L"OK sender="+wscSenderCharname+L" target="+wscTargetCharname);
+		PrintUserCmdText(iClientID, L"OK 发送者="+wscSenderCharname+L" 发送至="+wscTargetCharname);
 		return true;
 	}
 

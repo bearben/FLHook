@@ -2,7 +2,7 @@
 
 #define PRINT_ERROR() { for(uint i = 0; (i < sizeof(wscError)/sizeof(wstring)); i++) PrintUserCmdText(iClientID, wscError[i]); return; }
 #define PRINT_OK() PrintUserCmdText(iClientID, L"OK");
-#define PRINT_DISABLED() PrintUserCmdText(iClientID, L"Command disabled");
+#define PRINT_DISABLED() PrintUserCmdText(iClientID, L"指令已关闭");
 
 CONNECTION_DATA ConData[MAX_CLIENT_ID + 1];
 bool set_bPingCmd;
@@ -93,7 +93,7 @@ void Condata::HkTimerCheckKick()
 				{
 					ConData[iClientID].lstLoss.clear();
 					HkAddKickLog(iClientID, L"High loss");
-					HkMsgAndKick(iClientID, L"High loss", set_iKickMsgPeriod);
+					HkMsgAndKick(iClientID, L"网络丢包过高", set_iKickMsgPeriod);
 					// call tempban plugin
 					TEMPBAN_BAN_STRUCT tempban;
 					tempban.iClientID = iClientID;
@@ -108,7 +108,7 @@ void Condata::HkTimerCheckKick()
 				{
 					ConData[iClientID].lstPing.clear();
 					HkAddKickLog(iClientID, L"High ping");
-					HkMsgAndKick(iClientID, L"High ping", set_iKickMsgPeriod);
+					HkMsgAndKick(iClientID, L"网络响应时间过高", set_iKickMsgPeriod);
 					// call tempban plugin
 					TEMPBAN_BAN_STRUCT tempban;
 					tempban.iClientID = iClientID;
@@ -123,7 +123,7 @@ void Condata::HkTimerCheckKick()
 				{
 					ConData[iClientID].lstPing.clear();
 					HkAddKickLog(iClientID, L"High fluct");
-					HkMsgAndKick(iClientID, L"High ping fluctuation", set_iKickMsgPeriod);
+					HkMsgAndKick(iClientID, L"网络波动过高", set_iKickMsgPeriod);
 					// call tempban plugin
 					TEMPBAN_BAN_STRUCT tempban;
 					tempban.iClientID = iClientID;
@@ -139,7 +139,7 @@ void Condata::HkTimerCheckKick()
 					ConData[iClientID].lstObjUpdateIntervalls.clear();
 
 					HkAddKickLog(iClientID, L"High Lag");
-					HkMsgAndKick(iClientID, L"High Lag", set_iKickMsgPeriod);
+					HkMsgAndKick(iClientID, L"网络延迟过高", set_iKickMsgPeriod);
 					// call tempban plugin
 					TEMPBAN_BAN_STRUCT tempban;
 					tempban.iClientID = iClientID;
@@ -398,48 +398,48 @@ void TimerUpdateLossData()
 
 		wstring Response;
 
-		Response += L"Ping: ";
+		Response += L"响应：";
 		if (ConData[iClientIDTarget].lstPing.size() < set_iPingKickFrame)
-			Response += L"n/a Fluct: n/a ";
+			Response += L"未知 波动：未知 ";
 		else {
 			Response += stows(itos(ConData[iClientIDTarget].iAveragePing)).c_str();
-			Response += L"ms ";
+			Response += L"毫秒 ";
 			if (set_iPingKick > 0) {
-				Response += L"(Max: ";
+				Response += L"(最高：";
 				Response += stows(itos(set_iPingKick)).c_str();
 				Response += L"ms) ";
 			}
-			Response += L"Fluct: ";
+			Response += L"波动：";
 			Response += stows(itos(ConData[iClientIDTarget].iPingFluctuation)).c_str();
-			Response += L"ms ";
+			Response += L"毫秒 ";
 			if (set_iFluctKick > 0) {
-				Response += L"(Max: ";
+				Response += L"(最高：";
 				Response += stows(itos(set_iFluctKick)).c_str();
-				Response += L"ms) ";
+				Response += L"毫秒) ";
 			}
 		}
 
-		Response += L"Loss: ";
+		Response += L"丢包：";
 		if (ConData[iClientIDTarget].lstLoss.size() < (set_iLossKickFrame / (LOSS_INTERVALL / 1000)))
-			Response += L"n/a ";
+			Response += L"未知 ";
 		else {
 			Response += stows(itos(ConData[iClientIDTarget].iAverageLoss)).c_str();
 			Response += L"%% ";
 			if (set_iLossKick > 0) {
-				Response += L"(Max: ";
+				Response += L"(最高：";
 				Response += stows(itos(set_iLossKick)).c_str();
 				Response += L"%%) ";
 			}
 		}
 
-		Response += L"Lag: ";
+		Response += L"延迟：";
 		if (ConData[iClientIDTarget].lstObjUpdateIntervalls.size() < set_iLagDetectionFrame)
-			Response += L"n/a";
+			Response += L"未知";
 		else {
 			Response += stows(itos(ConData[iClientIDTarget].iLags)).c_str();
 			Response += L"%% ";
 			if (set_iLagKick > 0) {
-				Response += L"(Max: ";
+				Response += L"(最高：";
 				Response += stows(itos(set_iLagKick)).c_str();
 				Response += L"%%)";
 			}
@@ -461,7 +461,7 @@ void TimerUpdateLossData()
 		uint iShip = 0;
 		pub::Player::GetShip(iClientID, iShip);
 		if (!iShip) {
-			PrintUserCmdText(iClientID, L"Error: You are docked");
+			PrintUserCmdText(iClientID, L"错误：您已经停靠");
 			return true;
 		}
 
@@ -469,14 +469,14 @@ void TimerUpdateLossData()
 		pub::SpaceObj::GetTarget(iShip, iTarget);
 
 		if (!iTarget) {
-			PrintUserCmdText(iClientID, L"Error: No target");
+			PrintUserCmdText(iClientID, L"错误：没有选中目标");
 			return true;
 		}
 
 		uint iClientIDTarget = HkGetClientIDByShip(iTarget);
 		if (!HkIsValidClientID(iClientIDTarget))
 		{
-			PrintUserCmdText(iClientID, L"Error: Target is no player");
+			PrintUserCmdText(iClientID, L"错误：目标不是玩家");
 			return true;
 		}
 
@@ -489,48 +489,48 @@ void TimerUpdateLossData()
 			Response += L" - ";
 		}
 
-		Response += L"Ping: ";
+		Response += L"响应：";
 		if (ConData[iClientIDTarget].lstPing.size() < set_iPingKickFrame)
-			Response += L"n/a Fluct: n/a ";
+			Response += L"未知 波动：未知 ";
 		else {
 			Response += stows(itos(ConData[iClientIDTarget].iAveragePing)).c_str();
-			Response += L"ms ";
+			Response += L"毫秒 ";
 			if (set_iPingKick > 0) {
-				Response += L"(Max: ";
+				Response += L"(最高：";
 				Response += stows(itos(set_iPingKick)).c_str();
-				Response += L"ms) ";
+				Response += L"毫秒) ";
 			}
-			Response += L"Fluct: ";
+			Response += L"波动：";
 			Response += stows(itos(ConData[iClientIDTarget].iPingFluctuation)).c_str();
-			Response += L"ms ";
+			Response += L"毫秒 ";
 			if (set_iFluctKick > 0) {
-				Response += L"(Max: ";
+				Response += L"(最高：";
 				Response += stows(itos(set_iFluctKick)).c_str();
-				Response += L"ms) ";
+				Response += L"毫秒) ";
 			}
 		}
 
-		Response += L"Loss: ";
+		Response += L"丢包：";
 		if (ConData[iClientIDTarget].lstLoss.size() < (set_iLossKickFrame / (LOSS_INTERVALL / 1000)))
-			Response += L"n/a ";
+			Response += L"未知 ";
 		else {
 			Response += stows(itos(ConData[iClientIDTarget].iAverageLoss)).c_str();
 			Response += L"%% ";
 			if (set_iLossKick > 0) {
-				Response += L"(Max: ";
+				Response += L"(最高：";
 				Response += stows(itos(set_iLossKick)).c_str();
 				Response += L"%%) ";
 			}
 		}
 
-		Response += L"Lag: ";
+		Response += L"延迟：";
 		if (ConData[iClientIDTarget].lstObjUpdateIntervalls.size() < set_iLagDetectionFrame)
-			Response += L"n/a";
+			Response += L"未知";
 		else {
 			Response += stows(itos(ConData[iClientIDTarget].iLags)).c_str();
 			Response += L"%% ";
 			if (set_iLagKick > 0) {
-				Response += L"(Max: ";
+				Response += L"(最高：";
 				Response += stows(itos(set_iLagKick)).c_str();
 				Response += L"%%)";
 			}

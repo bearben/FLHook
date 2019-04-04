@@ -195,8 +195,8 @@ struct USERCMD
 
 USERCMD UserCmds[] =
 {
-	{ L"/ping", Condata::UserCmd_Ping, L"Usage: /ping" },
-	{ L"/pingtarget", Condata::UserCmd_PingTarget, L"Usage: /pingtarget" },
+	{ L"/ping", Condata::UserCmd_Ping, L"使用方法：/ping" },
+	{ L"/pingtarget", Condata::UserCmd_PingTarget, L"使用方法：/pingtarget" },
 };
 
 

@@ -30,8 +30,8 @@ namespace PimpShip
 {
 
 	// Intro messages when entering the room.
-	static wstring set_wscIntroMsg1 = L"Pimp-my-ship facilities are available here.";
-	static wstring set_wscIntroMsg2 = L"Type /pimpship on your console to see options.";
+	static wstring set_wscIntroMsg1 = L"此空间站有飞船装饰商。";
+	static wstring set_wscIntroMsg2 = L"输入/pimpship指令可以使用装饰功能。";
 
 	// Cost per changed item.
 	static int set_iCost = 0;
@@ -202,7 +202,7 @@ namespace PimpShip
 			{
 				mapInfo[iClientID].bInPimpDealer = false;
 				mapInfo[iClientID].mapCurrEquip.clear();
-				PrintUserCmdText(iClientID, L"ERR ship pimping facilities not available at this base.");
+				PrintUserCmdText(iClientID, L"错误：此空间站没有飞船装饰商。");
 				return false;
 			}
 		}
@@ -210,22 +210,22 @@ namespace PimpShip
 		mapInfo[iClientID].mapCurrEquip.clear();
 		mapInfo[iClientID].bInPimpDealer = true;
 
-		PrintUserCmdText(iClientID, L"Available ship pimping commands:");
+		PrintUserCmdText(iClientID, L"飞船装饰指令：");
 
 		PrintUserCmdText(iClientID, L"/showsetup");
-		PrintUserCmdText(iClientID, L"|     Display current ship setup.");
+		PrintUserCmdText(iClientID, L"|     列出飞船当前装饰配置。");
 
 		PrintUserCmdText(iClientID, L"/showitems");
-		PrintUserCmdText(iClientID, L"|     Display items that may be added to your ship.");
+		PrintUserCmdText(iClientID, L"|     列出将添加到您飞船的饰品。");
 
-		PrintUserCmdText(iClientID, L"/setitem <hardpoint id> <new item id>");
-		PrintUserCmdText(iClientID, L"|     Change the item at <hp id> to <item id>.");
-		PrintUserCmdText(iClientID, L"|     <hi id>s are shown by typing /show setup.");
-		PrintUserCmdText(iClientID, L"|     <item id>s are shown by typing /show items.");
+		PrintUserCmdText(iClientID, L"/setitem <hardpoint ID> <新饰品ID>");
+		PrintUserCmdText(iClientID, L"|     将模型<hardpoint ID>位置的装饰物改变为<饰品ID>。");
+		PrintUserCmdText(iClientID, L"|     输入/show指令查看飞船的全部<hardpoint ID>。");
+		PrintUserCmdText(iClientID, L"|     输入/show指令查看可以装配的全部<饰品ID>。");
 
 		PrintUserCmdText(iClientID, L"/buynow");
-		PrintUserCmdText(iClientID, L"|     Confirms the changes.");
-		PrintUserCmdText(iClientID, L"This facility costs " + ToMoneyStr(set_iCost) + L" credits to use.");
+		PrintUserCmdText(iClientID, L"|     确认购买。");
+		PrintUserCmdText(iClientID, L"此装饰更改需花费 " + ToMoneyStr(set_iCost) + L" 星币。");
 
 		wstring wscCharName = (const wchar_t*) Players.GetActiveCharacterName(iClientID);
 
@@ -253,7 +253,7 @@ namespace PimpShip
 		if (!mapInfo[iClientID].bInPimpDealer || !set_bEnablePimpShip)
 			return false;
 
-		PrintUserCmdText(iClientID, L"Current ship setup: %d", mapInfo[iClientID].mapCurrEquip.size());
+		PrintUserCmdText(iClientID, L"飞船当前配置：%d", mapInfo[iClientID].mapCurrEquip.size());
 		for (map<uint, EQ_HARDPOINT>::iterator iter = mapInfo[iClientID].mapCurrEquip.begin();
 			iter != mapInfo[iClientID].mapCurrEquip.end();
 			iter++)
@@ -271,7 +271,7 @@ namespace PimpShip
 		if (!mapInfo[iClientID].bInPimpDealer || !set_bEnablePimpShip)
 			return false;
 
-		PrintUserCmdText(iClientID, L"Available items: %d", mapAvailableItems.size());
+		PrintUserCmdText(iClientID, L"可以装配的饰品：%d", mapAvailableItems.size());
 		for (map<uint, ITEM_INFO>::iterator iter = mapAvailableItems.begin(); iter != mapAvailableItems.end(); iter++)
 		{
 			PrintUserCmdText(iClientID, L"|     %.2d:  %s", iter->first, iter->second.wscDescription.c_str());
@@ -293,13 +293,13 @@ namespace PimpShip
 		if (mapInfo[iClientID].mapCurrEquip.find(iHardPointID)
 			== mapInfo[iClientID].mapCurrEquip.end())
 		{
-			PrintUserCmdText(iClientID, L"ERR Invalid hard point ID");
+			PrintUserCmdText(iClientID, L"错误：hardpoint ID不合法");
 			return true;
 		}
 
 		if (mapAvailableItems.find(iSelectedItemID) == mapAvailableItems.end())
 		{
-			PrintUserCmdText(iClientID, L"ERR Invalid item ID");
+			PrintUserCmdText(iClientID, L"错误：饰品ID不合法");
 			return true;
 		}
 
@@ -323,12 +323,12 @@ namespace PimpShip
 			int iCash = 0;
 			if ((err = HkGetCash(wscCharName, iCash)) != HKE_OK)
 			{
-				PrintUserCmdText(iClientID, L"ERR %s", HkErrGetText(err).c_str());
+				PrintUserCmdText(iClientID, L"错误：%s", HkErrGetText(err).c_str());
 				return true;
 			}
 			if (iCash<0 && iCash<set_iCost)
 			{
-				PrintUserCmdText(iClientID, L"ERR Insufficient credits");
+				PrintUserCmdText(iClientID, L"错误：现金不足");
 				return true;
 			}
 			HkAddCash(wscCharName, 0-set_iCost);
@@ -348,7 +348,7 @@ namespace PimpShip
 			HkAddEquip(wscCharName, i->second.iArchID, wstos(i->second.wscHardPoint));
 		}
 
-		PrintUserCmdText(iClientID, L"OK Ship pimp complete. Please wait 10 seconds and reconnect.");
+		PrintUserCmdText(iClientID, L"飞船装饰完毕。请等待10秒钟再重新连接。");
 		HkDelayedKick(iClientID, 5);
 		return true;
 	}

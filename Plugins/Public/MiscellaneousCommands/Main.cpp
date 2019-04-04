@@ -68,7 +68,7 @@ bool CheckIsInBase(uint iClientID)
 	pub::Player::GetBase(iClientID, iBaseID);
 	if (!iBaseID)
 	{
-		PrintUserCmdText(iClientID, L"You must be in a base to use this command.");
+		PrintUserCmdText(iClientID, L"您需要在空间站里使用此指令。");
 		return false;
 	}
 
@@ -94,7 +94,7 @@ bool UserCmd_RefreshCharacters(uint iClientID, const wstring &wscCmd, const wstr
 	
 	CAccount *acc = HkGetAccountByClientID(iClientID);
 	CAccountListNode *characterList = acc->pFirstListNode;
-	PrintUserCmdText(iClientID, L"Refreshing Characters:");
+	PrintUserCmdText(iClientID, L"刷新角色：");
 	PrintUserCmdText(iClientID, L""); // Line break to make it look nice
 	int iCharactersRefreshed = 0; // Number to keep track of
 	HK_ERROR err; // If it errors we want to inform them
@@ -134,10 +134,10 @@ bool UserCmd_RefreshCharacters(uint iClientID, const wstring &wscCmd, const wstr
 				break; // End the loop if the names match
 
 		iCharactersRefreshed++;
-		PrintUserCmdText(iClientID, L"Character: %s - Timestamps Refreshed", wscCharacterName.c_str());
+		PrintUserCmdText(iClientID, L"角色：%s - 时间戳已刷新", wscCharacterName.c_str());
 		if ((err = HkFLIniWrite(wscCharacterName, L"tstamp", stows(toWrite))) != HKE_OK)
 		{
-			PrintUserCmdText(iClientID, L"ERROR: %s", HkErrGetText(err).c_str());
+			PrintUserCmdText(iClientID, L"错误：%s", HkErrGetText(err).c_str());
 			return true;
 		}
 
@@ -145,10 +145,10 @@ bool UserCmd_RefreshCharacters(uint iClientID, const wstring &wscCmd, const wstr
 		characterList = characterList->next;
 	}
 	// List the amount of characters we've refreshed.
-	PrintUserCmdText(iClientID, L"Sucessfully refreshed %u characters.", iCharactersRefreshed);
+	PrintUserCmdText(iClientID, L"成功刷新 %u 个角色。", iCharactersRefreshed);
 
 	// Kick them as a way to prevent save data loss and ensure everything ticks over as intended.
-	HkKickReason(reinterpret_cast<const wchar_t*>(Players.GetActiveCharacterName(iClientID)), L"Updating Character File, please wait 10 seconds before reconnecting.");
+	HkKickReason(reinterpret_cast<const wchar_t*>(Players.GetActiveCharacterName(iClientID)), L"更新角色文件，请等待 10 秒钟后重新登录。");
 	return true;
 }
 
@@ -161,11 +161,11 @@ bool UserCmd_FreelancerIFF(uint iClientID, const wstring &wscCmd, const wstring 
 	HK_ERROR err;
 	if ((err = HkSetRep(reinterpret_cast<const wchar_t*>(Players.GetActiveCharacterName(iClientID)), L"fc_freelancer", 1.0f)) != HKE_OK)
 	{
-		PrintUserCmdText(iClientID, L"ERROR: %s", HkErrGetText(err).c_str());
+		PrintUserCmdText(iClientID, L"错误：%s", HkErrGetText(err).c_str());
 		return true;
 	}
 	
-	PrintUserCmdText(iClientID, L"Freelancer IFF granted. You may need to /droprep if your old IFF exists after logging out/in and undocking.");
+	PrintUserCmdText(iClientID, L"已获得Freelancer IFF。若您的旧IFF依然存在，可以通过/droprep指令使用旧IFF。");
 	return true;
 }
 

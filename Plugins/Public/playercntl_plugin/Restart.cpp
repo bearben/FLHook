@@ -56,7 +56,7 @@ namespace Restart
 		hSearch = FindFirstFile(scRestartFiles.c_str(), &FileData); 
 		if (hSearch == INVALID_HANDLE_VALUE) 
 		{ 
-			PrintUserCmdText(iClientID, L"Restart files not found");
+			PrintUserCmdText(iClientID, L"未找到Restart指令所需文件");
 			return true;
 		} 
 		
@@ -75,7 +75,7 @@ namespace Restart
 
 		FindClose(hSearch);
 
-		PrintUserCmdText(iClientID, L"You can use these restarts:");
+		PrintUserCmdText(iClientID, L"您可以使用选择如下势力：");
 		PrintUserCmdText(iClientID, L"%s", wscMsg.c_str());
 		PrintUserCmdText(iClientID, L"OK");
 		return true;
@@ -113,7 +113,7 @@ namespace Restart
 			restart.scRestartFile = string(szCurDir) + "\\flhook_plugins\\restart\\_" + wstos(wscFaction) + ".fl";
 			if (!PathFileExistsA(restart.scRestartFile.c_str()))
 			{
-				PrintUserCmdText(iClientID, L"ERR Template does not exist");
+				PrintUserCmdText(iClientID, L"错误：模板不存在");
 				return true;
 			}
 		}
@@ -128,7 +128,7 @@ namespace Restart
 		pub::Player::GetBase(iClientID, iBaseID);
 		if (!iBaseID)
 		{
-			PrintUserCmdText(iClientID, L"ERR Not in base");
+			PrintUserCmdText(iClientID, L"错误：不在空间站里");
 			return true;
 		}
 
@@ -137,7 +137,7 @@ namespace Restart
 		HkGetRank(restart.wscCharname, iRank);
 		if (iRank == 0 || iRank > set_iMaxRank)
 		{
-			PrintUserCmdText(iClientID, L"ERR You must create a new char to restart. Your rank is too high");
+			PrintUserCmdText(iClientID, L"错误：您的等级太高，不能使用Restart指令");
 			return true;
 		}
 
@@ -145,7 +145,7 @@ namespace Restart
 		HkGetCash(restart.wscCharname, iCash);
 		if (iCash > set_iMaxCash)
 		{
-			PrintUserCmdText(iClientID, L"ERR You must create a new char to restart. Your cash is too high");
+			PrintUserCmdText(iClientID, L"错误：您的等级太高，不能使用Restart指令");
 			return true;
 		}
 
@@ -155,7 +155,7 @@ namespace Restart
 			HkGetAccountDirName(acc, restart.wscDir);
 			HkGetCharFileName(restart.wscCharname, restart.wscCharfile);
 			pendingRestarts.push_back(restart);
-			HkKickReason(restart.wscCharname, L"Updating character, please wait 10 seconds before reconnecting");
+			HkKickReason(restart.wscCharname, L"更新角色中，请等待 10 秒钟后重新登录");
 		}
 		return true;
 	}

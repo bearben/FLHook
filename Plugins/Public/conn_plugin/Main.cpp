@@ -23,8 +23,8 @@ Connecticut Plugin by MadHunter
 
 int transferFlags[MAX_CLIENT_ID+1];
 
-const std::wstring STR_INFO1		= L"Please dock at nearest base";
-const std::wstring STR_INFO2		= L"Cargo hold is not empty";
+const std::wstring STR_INFO1		= L"请就近停靠";
+const std::wstring STR_INFO2		= L"货仓没有清空";
 
 int set_iPluginDebug = 0;
 // Base to beam to.
@@ -200,7 +200,7 @@ bool UserCmd_Process(uint client, const wstring &cmd)
 			|| system == set_iTargetSystemID
 			|| GetCustomBaseForClient(client))
 		{
-			PrintUserCmdText(client, L"ERR Cannot use command in this system or base");
+			PrintUserCmdText(client, L"错误：不能在这里使用conn指令");
 			return true;
 		}
 
@@ -217,7 +217,7 @@ bool UserCmd_Process(uint client, const wstring &cmd)
 		}
 
 		StoreReturnPointForClient(client);
-		PrintUserCmdText(client, L"Redirecting undock to Connecticut.");
+		PrintUserCmdText(client, L"已传送至Connecticut星系New Haven空间站。");
 		transferFlags[client] = CLIENT_STATE_TRANSFER;
 
 		return true;
@@ -226,7 +226,7 @@ bool UserCmd_Process(uint client, const wstring &cmd)
 	{
 		if (!ReadReturnPointForClient(client))
 		{
-			PrintUserCmdText(client, L"No return possible");
+			PrintUserCmdText(client, L"没有返回的目标，请联系管理员");
 			return true;
 		}
 
@@ -238,7 +238,7 @@ bool UserCmd_Process(uint client, const wstring &cmd)
 
 		if (!CheckReturnDock(client, set_iTargetBaseID))
 		{
-			PrintUserCmdText(client, L"Not in correct base");
+			PrintUserCmdText(client, L"此空间站不能使用返回指令");
 			return true;
 		}
 
@@ -248,7 +248,7 @@ bool UserCmd_Process(uint client, const wstring &cmd)
 			return true;
 		}
 
-		PrintUserCmdText(client, L"Redirecting undock to previous base");
+		PrintUserCmdText(client, L"已传送至之前的空间站。");
 		transferFlags[client] = CLIENT_STATE_RETURN;
 
 		return true;

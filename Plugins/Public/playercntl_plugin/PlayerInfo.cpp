@@ -78,7 +78,7 @@ namespace PlayerInfo
 
 		if (!wszTargetName)
 		{
-			PrintUserCmdText(iClientID, L"ERR No target");
+			PrintUserCmdText(iClientID, L"错误：没有选中目标");
 			return true;
 		}
 
@@ -97,7 +97,7 @@ namespace PlayerInfo
 
 		if (wscPlayerInfo.length() < 30)
 		{
-			PrintUserCmdText(iClientID, L"ERR No information available");
+			PrintUserCmdText(iClientID, L"错误：无信息");
 			return true;
 		}
 
@@ -141,13 +141,13 @@ namespace PlayerInfo
 			int length = CurrLength(scFilePath) + wscMsg.length();
 			if (length > MAX_CHARACTERS)
 			{
-				PrintUserCmdText(iClientID, L"ERR Too many characters. Limit is %d", MAX_CHARACTERS);
+				PrintUserCmdText(iClientID, L"错误：过多字符，上限 %d 个", MAX_CHARACTERS);
 				return false;
 			}
 
 			wstring wscNewMsg = IniGetLongWS(scFilePath, "Info", itos(iPara), L"") + XMLText(wscMsg);
 			IniWriteW(scFilePath, "Info", itos(iPara), wscNewMsg);
-			PrintUserCmdText(iClientID, L"OK %d/%d characters used", length, MAX_CHARACTERS);
+			PrintUserCmdText(iClientID, L"已使用 %d/%d 个字符", length, MAX_CHARACTERS);
 		}
 		else if (iPara > 0 && iPara <= MAX_PARAGRAPHS && wscCommand == L"d")
 		{
@@ -157,9 +157,9 @@ namespace PlayerInfo
 		else
 		{
 			PrintUserCmdText(iClientID, L"错误：参数不合法");
-			PrintUserCmdText(iClientID, L"/setinfo <paragraph> <command> <text>");
-			PrintUserCmdText(iClientID, L"|  <paragraph> The paragraph number in the range 1-%d", MAX_PARAGRAPHS);
-			PrintUserCmdText(iClientID, L"|  <command> The command to perform on the paragraph, 'a' for append, 'd' for delete");
+			PrintUserCmdText(iClientID, L"/setinfo <小节编号> <命令> <小节内容>");
+			PrintUserCmdText(iClientID, L"|  <小节编号> --- 从 1 至 %d", MAX_PARAGRAPHS);
+			PrintUserCmdText(iClientID, L"|  <命令> --- 'a'（追加内容），'d'（删除小节）");
 		}
 
 		return true;

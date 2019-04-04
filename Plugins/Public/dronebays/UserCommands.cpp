@@ -8,7 +8,7 @@ bool UserCommands::UserCmd_Deploy(uint iClientID, const wstring& wscCmd, const w
 	pub::Player::GetShip(iClientID, playerShip);
 	if(!playerShip)
 	{
-		PrintUserCmdText(iClientID, L"ERR Not in space");
+		PrintUserCmdText(iClientID, L"错误：不在太空中");
 		return true;
 	}
 
@@ -30,7 +30,7 @@ bool UserCommands::UserCmd_Deploy(uint iClientID, const wstring& wscCmd, const w
 
 	if (!foundBay)
 	{
-		PrintUserCmdText(iClientID, L"No valid mounted drone bay found");
+		PrintUserCmdText(iClientID, L"未找到无人机库设备");
 		return true;
 	}
 
@@ -39,14 +39,14 @@ bool UserCommands::UserCmd_Deploy(uint iClientID, const wstring& wscCmd, const w
 	// Verify that the user doesn't already have a drone in space
 	if(clientDroneInfo[iClientID].deployedInfo.deployedDroneObj != 0)
 	{
-		PrintUserCmdText(iClientID, L"You may only have one drone deployed at a time");
+		PrintUserCmdText(iClientID, L"同一时间您只能使用一个无人机");
 		return true;
 	}
 
 	// Verify that the user isn't already building a drone
 	if(clientDroneInfo[iClientID].buildState != STATE_DRONE_OFF)
 	{
-		PrintUserCmdText(iClientID, L"You are already prepping a drone for takeoff!");
+		PrintUserCmdText(iClientID, L"您已经有一架无人机准备起飞");
 		return true;
 	}
 
@@ -54,7 +54,7 @@ bool UserCommands::UserCmd_Deploy(uint iClientID, const wstring& wscCmd, const w
 	const ENGINE_STATE engineState = HkGetEngineState(iClientID);
 	if(engineState == ES_TRADELANE || engineState == ES_CRUISE)
 	{
-		PrintUserCmdText(iClientID, L"Engine state inoppertune for drone deployment, aborting launch");
+		PrintUserCmdText(iClientID, L"巡航或通道环中无法发射无人机，发射已取消");
 		return true;
 	}
 
@@ -64,13 +64,13 @@ bool UserCommands::UserCmd_Deploy(uint iClientID, const wstring& wscCmd, const w
 	// Verify that the requested drone type is a member of the bay's available drones
 	if(find(bayArch.availableDrones.begin(), bayArch.availableDrones.end(), reqDroneType) == bayArch.availableDrones.end())
 	{
-		PrintUserCmdText(iClientID, L"Your drone bay does not support this type of deployment.");
-		PrintUserCmdText(iClientID, L"---Valid drones---");
+		PrintUserCmdText(iClientID, L"您的无人机库不支持此种无人机。");
+		PrintUserCmdText(iClientID, L"--- 可以发射的无人机 ---");
 		for (const auto& bay : bayArch.availableDrones)
 		{
 			PrintUserCmdText(iClientID, stows(bay));
 		}
-		PrintUserCmdText(iClientID, L"------------------");
+		PrintUserCmdText(iClientID, L"------------------------");
 		return true;
 	}
 
@@ -86,7 +86,7 @@ bool UserCommands::UserCmd_Deploy(uint iClientID, const wstring& wscCmd, const w
 
 	// Set the buildstate, and alert the user
 	clientDroneInfo[iClientID].buildState = STATE_DRONE_BUILDING;
-	PrintUserCmdText(iClientID, L"Drone being prepared for deployment :: Launch in ETA %i seconds", clientDroneInfo[iClientID].droneBay.iDroneBuildTime);
+	PrintUserCmdText(iClientID, L"无人机已经做好发射准备 :: 倒计时 %i 秒", clientDroneInfo[iClientID].droneBay.iDroneBuildTime);
 
 	// Save the carrier shipObj to the client struct
 	clientDroneInfo[iClientID].carrierShipobj = playerShip;
@@ -101,14 +101,14 @@ bool UserCommands::UserCmd_AttackTarget(uint iClientID, const wstring& wscCmd, c
 	pub::Player::GetShip(iClientID, iShipObj);
 	if(!iShipObj)
 	{
-		PrintUserCmdText(iClientID, L"You must be in space to use this command");
+		PrintUserCmdText(iClientID, L"您需要在太空中使用此指令");
 		return true;
 	}
 
 	// Verify that the user has a drone currently deployed
 	if(clientDroneInfo[iClientID].deployedInfo.deployedDroneObj == 0)
 	{
-		PrintUserCmdText(iClientID, L"You must have a drone deployed for this to work");
+		PrintUserCmdText(iClientID, L"您需要有一架活动的无人机来执行此任务");
 		return true;
 	}
 
@@ -118,7 +118,7 @@ bool UserCommands::UserCmd_AttackTarget(uint iClientID, const wstring& wscCmd, c
 
 	if(!iTargetObj)
 	{
-		PrintUserCmdText(iClientID, L"Please target the vessel which the drone should be directed to");
+		PrintUserCmdText(iClientID, L"请选中无人机的攻击目标");
 		return true;
 	}
 
@@ -129,7 +129,7 @@ bool UserCommands::UserCmd_AttackTarget(uint iClientID, const wstring& wscCmd, c
 	Archetype::Ship* targetShiparch = Archetype::GetShip(targetArchetype);
 	if (!targetShiparch)
 	{
-		PrintUserCmdText(iClientID, L"Invalid target: Does not look like a ship");
+		PrintUserCmdText(iClientID, L"目标不合法，不是一艘飞船");
 		return true;
 	}
 
@@ -137,7 +137,7 @@ bool UserCommands::UserCmd_AttackTarget(uint iClientID, const wstring& wscCmd, c
 	const auto it = find(clientBayArch.validShipclassTargets.begin(), clientBayArch.validShipclassTargets.end(), targetShiparch->iShipClass);
 	if(it == clientBayArch.validShipclassTargets.end())
 	{
-		PrintUserCmdText(iClientID, L"Invalid target: This drone is not equipped to handle ships of that size");
+		PrintUserCmdText(iClientID, L"目标不合法：无人机不能应对此飞船");
 		return true;
 	}
 
@@ -166,7 +166,7 @@ bool UserCommands::UserCmd_AttackTarget(uint iClientID, const wstring& wscCmd, c
 	}
 
 	clientDroneInfo[iClientID].deployedInfo.lastShipObjTarget = iTargetObj;
-	PrintUserCmdText(iClientID, L"Drone targeting selected ship\n");
+	PrintUserCmdText(iClientID, L"无人机攻击选中飞船\n");
 
 	// If the last shipObj the drone was targeting is a player, log the event
 	if (clientDroneInfo[iClientID].deployedInfo.lastShipObjTarget != 0)
@@ -184,7 +184,7 @@ bool UserCommands::UserCmd_AttackTarget(uint iClientID, const wstring& wscCmd, c
 			Utility::LogEvent(wstos(logString).c_str());
 
 			// Since we know this was a real player, alert them that they're being engaged
-			PrintUserCmdText(targetid, L"Player %s has targeted you with a drone!", charname);
+			PrintUserCmdText(targetid, L"玩家 %s 的无人机正向你攻击！", charname);
 		}
 	}
 
@@ -200,14 +200,14 @@ bool UserCommands::UserCmd_RecallDrone(uint iClientID, const wstring& wscCmd, co
 	pub::Player::GetShip(iClientID, iShipObj);
 	if (!iShipObj)
 	{
-		PrintUserCmdText(iClientID, L"You must be in space to use this command");
+		PrintUserCmdText(iClientID, L"您需要在太空中使用此指令");
 		return true;
 	}
 
 	// Verify that the user has a drone currently deployed
 	if (clientDroneInfo[iClientID].deployedInfo.deployedDroneObj == 0)
 	{
-		PrintUserCmdText(iClientID, L"You must have a drone deployed for this to work");
+		PrintUserCmdText(iClientID, L"您需要有一架活动的无人机来执行此任务");
 		return true;
 	}
 
@@ -230,7 +230,7 @@ bool UserCommands::UserCmd_RecallDrone(uint iClientID, const wstring& wscCmd, co
 	
 	droneDespawnMap[iClientID] = wrapper;
 
-	PrintUserCmdText(iClientID, L"Drone recall operation sent");
+	PrintUserCmdText(iClientID, L"已发送无人机返航指令");
 
 	return true;
 }
@@ -243,14 +243,14 @@ bool UserCommands::UserCmd_DroneStop(uint iClientID, const wstring& wscCmd, cons
 	pub::Player::GetShip(iClientID, iShipObj);
 	if (!iShipObj)
 	{
-		PrintUserCmdText(iClientID, L"You must be in space to use this command");
+		PrintUserCmdText(iClientID, L"您需要在太空中使用此指令");
 		return true;
 	}
 
 	// Verify that the user has a drone currently deployed
 	if (clientDroneInfo[iClientID].deployedInfo.deployedDroneObj == 0)
 	{
-		PrintUserCmdText(iClientID, L"You must have a drone deployed for this to work");
+		PrintUserCmdText(iClientID, L"您需要有一架活动的无人机来执行此任务");
 		return true;
 	}
 
@@ -263,7 +263,7 @@ bool UserCommands::UserCmd_DroneStop(uint iClientID, const wstring& wscCmd, cons
 	pub::AI::DirectiveCancelOp cancelOp;
 	pub::AI::SubmitDirective(droneObj, &cancelOp);
 
-	PrintUserCmdText(iClientID, L"Drone operations aborted");
+	PrintUserCmdText(iClientID, L"无人机任务取消");
 
 	// Log event
 	const wstring charname = reinterpret_cast<const wchar_t*>(Players.GetActiveCharacterName(iClientID));
@@ -282,14 +282,14 @@ bool UserCommands::UserCmd_DroneCome(uint iClientID, const wstring& wscCmd, cons
 	pub::Player::GetShip(iClientID, iShipObj);
 	if (!iShipObj)
 	{
-		PrintUserCmdText(iClientID, L"You must be in space to use this command");
+		PrintUserCmdText(iClientID, L"您需要在太空中使用此指令");
 		return true;
 	}
 
 	// Verify that the user has a drone currently deployed
 	if (clientDroneInfo[iClientID].deployedInfo.deployedDroneObj == 0)
 	{
-		PrintUserCmdText(iClientID, L"You must have a drone deployed for this to work");
+		PrintUserCmdText(iClientID, L"您需要有一架活动的无人机来执行此任务");
 		return true;
 	}
 
@@ -310,7 +310,7 @@ bool UserCommands::UserCmd_DroneCome(uint iClientID, const wstring& wscCmd, cons
 
 	pub::AI::SubmitDirective(clientDroneInfo[iClientID].deployedInfo.deployedDroneObj, &gotoOp);
 
-	PrintUserCmdText(iClientID, L"Drone disengaging and returning to your position");
+	PrintUserCmdText(iClientID, L"无人机脱离战斗并返回您所在位置");
 
 	// If the last shipObj the drone was targeting is a player, log the event
 	if (clientDroneInfo[iClientID].deployedInfo.lastShipObjTarget != 0)
@@ -352,19 +352,19 @@ bool UserCommands::UserCmd_DroneBayAvailability(uint iClientID, const wstring& w
 
 	if (!foundBay)
 	{
-		PrintUserCmdText(iClientID, L"No valid mounted drone bay found");
+		PrintUserCmdText(iClientID, L"未找到无人机库设备");
 		return true;
 	}
 
 	clientDroneInfo[iClientID].droneBay = bayArch;
 
 	// Print out each available drone type for this bay
-	PrintUserCmdText(iClientID, L"---Valid drones---");
+	PrintUserCmdText(iClientID, L"--- 可以发射的无人机 ---");
 	for (const auto& bay : bayArch.availableDrones)
 	{
 		PrintUserCmdText(iClientID, stows(bay));
 	}
-	PrintUserCmdText(iClientID, L"------------------");
+	PrintUserCmdText(iClientID, L"------------------------");
 
 	return true;
 }
@@ -375,21 +375,21 @@ bool UserCommands::UserCmd_Debug(uint iClientID, const wstring& wscCmd, const ws
 {
 	// For debugging, list the contents of the users dronemap
 	ClientDroneInfo info = clientDroneInfo[iClientID];
-	PrintUserCmdText(iClientID, L"Current drone ID: %u", info.deployedInfo.deployedDroneObj);
-	PrintUserCmdText(iClientID, L"Current state: %u", info.buildState);
+	PrintUserCmdText(iClientID, L"当前的无人机ID为 %u", info.deployedInfo.deployedDroneObj);
+	PrintUserCmdText(iClientID, L"当前状态 %u", info.buildState);
 	return true;
 }
 
 bool UserCommands::UserCmd_DroneHelp(uint iClientID, const wstring& wscCmd, const wstring& wscParam,
 	const wchar_t* usage)
 {
-	PrintUserCmdText(iClientID, L"Drone Usage");
-	PrintUserCmdText(iClientID, L"/dronetypes - Lists all available dronetypes for your bay type");
-	PrintUserCmdText(iClientID, L"/dronedeploy [dronetype] - Launches a drone compatible with your dronebay");
-	PrintUserCmdText(iClientID, L"/dronetarget - Directs your drone to attack whatever you are targeting");
-	PrintUserCmdText(iClientID, L"/dronestop - Stops your drone from attacking");
-	PrintUserCmdText(iClientID, L"/dronerecall - Recalls your drone, and docks it with your carrier");
-	PrintUserCmdText(iClientID, L"/dronecome - Disengages the drone from it's current target, and directs it to fly to your position.");
+	PrintUserCmdText(iClientID, L"无人机使用方法");
+	PrintUserCmdText(iClientID, L"/dronetypes - 列出您的机库支持的无人机类型");
+	PrintUserCmdText(iClientID, L"/dronedeploy [无人机类型] - 发射指定类型的无人机");
+	PrintUserCmdText(iClientID, L"/dronetarget - 命令无人机攻击选中的目标");
+	PrintUserCmdText(iClientID, L"/dronestop - 命令无人机停止攻击");
+	PrintUserCmdText(iClientID, L"/dronerecall - 命令无人机返航并停靠");
+	PrintUserCmdText(iClientID, L"/dronecome - 命令无人机脱离战斗并返回您所在位置");
 
 	return true;
 }

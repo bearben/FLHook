@@ -58,9 +58,9 @@ namespace MiscCmds
 	typedef map<uint, INFO, less<uint> >::value_type mapInfo_map_pair_t;
 	typedef map<uint, INFO, less<uint> >::iterator mapInfo_map_iter_t;
 
-	wstring set_wscStuckMsg = L"Attention! Stand clear. Towing %player";
-	wstring set_wscDiceMsg = L"%player rolled %number";
-	wstring set_wscCoinMsg = L"%player tossed %result";
+	wstring set_wscStuckMsg = L"注意闪避！%player 正在使用Stuck指令";
+	wstring set_wscDiceMsg = L"%player 掷出了 %number";
+	wstring set_wscCoinMsg = L"%player 掷出了 %result";
 
 	/// ID of music to play when smiting players.
 	uint set_iSmiteMusicID = 0;
@@ -81,9 +81,9 @@ namespace MiscCmds
 		set_iRepdropCost = IniGetI(scPluginCfgFile, "General", "RepDropCost", 0);
 		set_iLocalChatRange = IniGetF(scPluginCfgFile, "General", "LocalChatRange", 0);
 
-		set_wscStuckMsg = stows(IniGetS(scPluginCfgFile, "General", "StuckMsg", "Attention! Stand clear. Towing %player"));
-		set_wscDiceMsg = stows(IniGetS(scPluginCfgFile, "General", "DiceMsg", "%player rolled %number of %max"));
-		set_wscCoinMsg = stows(IniGetS(scPluginCfgFile, "General", "CoinMsg", "%player tossed %result"));
+		set_wscStuckMsg = stows(IniGetS(scPluginCfgFile, "General", "StuckMsg", "注意闪避！%player 正在使用Stuck指令"));
+		set_wscDiceMsg = stows(IniGetS(scPluginCfgFile, "General", "DiceMsg", "%player 掷出了 %number （最大：%max）"));
+		set_wscCoinMsg = stows(IniGetS(scPluginCfgFile, "General", "CoinMsg", "%player 掷出了 %result"));
 
 		set_iSmiteMusicID = CreateID(IniGetS(scPluginCfgFile, "General", "SmiteMusic", "music_danger").c_str());
 	}
@@ -168,7 +168,7 @@ namespace MiscCmds
 		HKPLAYERINFO p;
 		if (HkGetPlayerInfo((const wchar_t*) Players.GetActiveCharacterName(iClientID), p, false)!=HKE_OK || p.iShip==0)
 		{
-			PrintUserCmdText(iClientID, L"ERR Not in space");
+			PrintUserCmdText(iClientID, L"错误：不在太空中");
 			return true;
 		}
 
@@ -179,7 +179,7 @@ namespace MiscCmds
 		Vector erot = MatrixToEuler(rot);
 
 		wchar_t buf[100];
-		_snwprintf(buf, sizeof(buf), L"Position %0.0f %0.0f %0.0f Orient %0.0f %0.0f %0.0f",
+		_snwprintf(buf, sizeof(buf), L"位置 %0.0f %0.0f %0.0f 朝向 %0.0f %0.0f %0.0f",
 			pos.x, pos.y, pos.z, erot.x, erot.y, erot.z);
 		PrintUserCmdText(iClientID, buf);
 		return true;
@@ -193,7 +193,7 @@ namespace MiscCmds
 		HKPLAYERINFO p;
 		if (HkGetPlayerInfo(wscCharname, p, false)!=HKE_OK)
 		{
-			PrintUserCmdText(iClientID, L"ERR Not in space");
+			PrintUserCmdText(iClientID, L"错误：不在太空中");
 			return true;
 		}
 
@@ -202,7 +202,7 @@ namespace MiscCmds
 		pub::SpaceObj::GetMotion(p.iShip, dir1, dir2);
 		if (dir1.x>5 || dir1.y>5 || dir1.z>5)
 		{
-			PrintUserCmdText(iClientID, L"ERR Ship is moving");
+			PrintUserCmdText(iClientID, L"错误：飞船正在移动");
 			return true;
 		}
 
@@ -231,7 +231,7 @@ namespace MiscCmds
 		wstring wscRepGroupNick;
 		if (HkFLIniGet(wscCharname, L"rep_group", wscRepGroupNick)!=HKE_OK || wscRepGroupNick.length()==0)
 		{
-			PrintUserCmdText(iClientID, L"ERR No affiliation");
+			PrintUserCmdText(iClientID, L"错误：当前角色没有IFF");
 			return true;
 		}
 
@@ -240,24 +240,24 @@ namespace MiscCmds
 		int iCash = 0;
 		if ((err = HkGetCash(wscCharname, iCash)) != HKE_OK)
 		{
-			PrintUserCmdText(iClientID, L"ERR %s", HkErrGetText(err).c_str());
+			PrintUserCmdText(iClientID, L"错误：%s", HkErrGetText(err).c_str());
 			return true;
 		}
 		if (set_iRepdropCost>0 && iCash<set_iRepdropCost)
 		{
-			PrintUserCmdText(iClientID, L"ERR Insufficient credits");
+			PrintUserCmdText(iClientID, L"错误：现金不足");
 			return true;
 		}
 
 		float fValue = 0.0f;
 		if ((err = HkGetRep(wscCharname, wscRepGroupNick, fValue)) != HKE_OK)
 		{
-			PrintUserCmdText(iClientID, L"ERR %s", HkErrGetText(err).c_str());
+			PrintUserCmdText(iClientID, L"错误：%s", HkErrGetText(err).c_str());
 			return true;
 		}
 
 		HkSetRep(wscCharname, wscRepGroupNick, 0.599f);
-		PrintUserCmdText(iClientID, L"OK Reputation dropped, logout for change to take effect.");
+		PrintUserCmdText(iClientID, L"已减少IFF所属势力的关系，重新登录将生效。");
 
 		// Remove cash if we're charging for it.
 		if (set_iRepdropCost>0)
@@ -340,7 +340,7 @@ namespace MiscCmds
 			wstring wscCharname = (const wchar_t*)Players.GetActiveCharacterName(iFromClientID);
 
 			// Print the results
-			wstring diceAlert = L"%player rolled %value with the formula %formula";
+			wstring diceAlert = L"%player 用公式 %formula 掷出了 %value";
 			diceAlert = ReplaceStr(diceAlert, L"%player", wscCharname);
 			diceAlert = ReplaceStr(diceAlert, L"%value", stows(itos(number)));
 			diceAlert = ReplaceStr(diceAlert, L"%formula", sm[0].str().c_str());
@@ -356,10 +356,10 @@ namespace MiscCmds
 		}
 		else
 		{
-			PrintUserCmdText(iFromClientID, L"Usage: (NumDice) d (DiceSides) [+-] (Modifier)");
-			PrintUserCmdText(iFromClientID, L"Examples: /roll 1d20 -- Roll 1, 20 sided die");
-			PrintUserCmdText(iFromClientID, L"          /roll 1d8+4 -- Roll 1, 8 sided die and add 8");
-			PrintUserCmdText(iFromClientID, L"          /roll 4d20+2 -- Roll 4, 20 sided dice, adding 2 to each die rolled");
+			PrintUserCmdText(iFromClientID, L"使用方法：(NumDice) d (DiceSides) [+-] (Modifier)");
+			PrintUserCmdText(iFromClientID, L"例如：/roll 1d20 -- 掷1个20面的骰子");
+			PrintUserCmdText(iFromClientID, L"      /roll 1d8+4 -- 掷1个8面的骰子，再加8");
+			PrintUserCmdText(iFromClientID, L"      /roll 4d20+2 -- 投4个20面的骰子，并且每个骰子加2");
 		}
 
 		return true;
@@ -374,7 +374,7 @@ namespace MiscCmds
 		uint number = (rand()%2);
 		wstring wscMsg = set_wscCoinMsg;
 		wscMsg = ReplaceStr(wscMsg, L"%player", wscCharname);
-		wscMsg = ReplaceStr(wscMsg, L"%result", (number==1)?L"heads":L"tails");
+		wscMsg = ReplaceStr(wscMsg, L"%result", (number==1)?L"正面":L"反面");
 		PrintLocalUserCmdText(iFromClientID, wscMsg, set_iLocalChatRange);
 		return true;
 	}
@@ -492,7 +492,7 @@ namespace MiscCmds
 		pub::Player::GetShip(iClientID, iShip);
 		if (!iShip)
 		{
-			PrintUserCmdText(iClientID, L"ERR Not in space");
+			PrintUserCmdText(iClientID, L"错误：不在太空中");
 			return;
 		}
 
@@ -534,22 +534,22 @@ namespace MiscCmds
 		IObjInspectImpl *obj = HkGetInspect(iClientID);
 		if (!obj)
 		{
-			PrintUserCmdText(iClientID, L"Self destruct prohibited. Not in space.");
+			PrintUserCmdText(iClientID, L"不在太空中，无法启动自毁装置。");
 			return true;
 		}
 
-		if (wscParam == L"0000")
+		if (wscParam == L"9102")
 		{
-			PrintUserCmdText(iClientID, L"Self destruct enabled. Standby.");
-			PrintUserCmdText(iClientID, L"Ejecting pod...");
+			PrintUserCmdText(iClientID, L"自毁装置已预备。");
+			PrintUserCmdText(iClientID, L"弹射救生舱……");
 			HkLightFuse((IObjRW*)obj, CreateID("death_comm"), 0.0f, 0.0f, 0.0f);
 			mapInfo[iClientID].bSelfDestruct = true;
 		}
 		else
 		{
-			PrintUserCmdText(iClientID, L"WARNING! SELF DESTRUCT WILL COMPLETELY AND PERMANENTLY DESTROY SHIP.");
-			PrintUserCmdText(iClientID, L"WARNING! WARNING! SECURITY CONFIRMATION REQUIRED. TYPE");
-			PrintUserCmdText(iClientID, L"/selfdestruct 0000");
+			PrintUserCmdText(iClientID, L"警告！自毁装置将完全摧毁飞船。");
+			PrintUserCmdText(iClientID, L"警告！警告！安全确认，请输入：");
+			PrintUserCmdText(iClientID, L"/selfdestruct 9102");
 		}
 		return true;
 	}
@@ -564,7 +564,7 @@ namespace MiscCmds
 	bool MiscCmds::UserCmd_Shields(uint iClientID, const wstring &wscCmd, const wstring &wscParam, const wchar_t *usage)
 	{
 		mapInfo[iClientID].bShieldsDown = !mapInfo[iClientID].bShieldsDown;
-		PrintUserCmdText(iClientID, L"Shields %s", mapInfo[iClientID].bShieldsDown ? L"Disabled":L"Enabled");
+		PrintUserCmdText(iClientID, L"护盾 %s", mapInfo[iClientID].bShieldsDown ? L"关闭":L"开启");
 		return true;
 	}
 

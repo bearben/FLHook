@@ -189,6 +189,7 @@ void FLHookInit_Pre()
 	hConsoleErr = GetStdHandle(STD_ERROR_HANDLE);
 
 	ConPrint(L"Welcome to FLHook Console (" VERSION L")\n");
+	ConPrint(L"This version of FLHook is deeply modified by Ben\n");
 
 	try {
 

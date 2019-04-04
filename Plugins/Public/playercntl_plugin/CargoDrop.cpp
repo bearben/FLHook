@@ -22,7 +22,7 @@
 
 namespace CargoDrop
 {
-	wstring set_wscDisconnectInSpaceMsg = L"%player 与服务器断开连接";
+	wstring set_wscDisconnectInSpaceMsg = L"%player 与服务器断开了连接";
 
 	/// If true report disconnecting players.
 	bool set_bReportDisconnectingPlayers = true;
@@ -72,7 +72,7 @@ namespace CargoDrop
 		set_iLootCrateID = CreateID(IniGetS(scPluginCfgFile, "General", "CargoDropContainer","lootcrate_ast_loot_metal").c_str());
 		set_iHullItem1ID = CreateID(IniGetS(scPluginCfgFile, "General", "HullDrop1NickName", "commodity_super_alloys").c_str());
 		set_iHullItem2ID = CreateID(IniGetS(scPluginCfgFile, "General", "HullDrop2NickName", "commodity_engine_components").c_str());
-		set_wscDisconnectInSpaceMsg = stows(IniGetS(scPluginCfgFile, "General", "DisconnectMsg", "%player is attempting to engage cloaking device"));
+		set_wscDisconnectInSpaceMsg = stows(IniGetS(scPluginCfgFile, "General", "DisconnectMsg", "%player 与服务器断开了连接"));
 
 		// Read the no loot items list (item-nick)
 		list<INISECTIONVALUE> lstItems;

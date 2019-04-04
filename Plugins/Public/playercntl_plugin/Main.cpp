@@ -310,7 +310,7 @@ namespace HkIEngine
 					if (response==PROCEED_DOCK)
 					{
 					// Print out a message when a player ship docks.
-					wstring wscMsg = L"%time 注意：%player 请求停靠";
+					wstring wscMsg = L"%time %player 请求停靠";
 					wscMsg = ReplaceStr(wscMsg, L"%time", GetTimeString(set_bLocalTime));
 					wscMsg = ReplaceStr(wscMsg, L"%player", (const wchar_t*)Players.GetActiveCharacterName(iClientID));
 					PrintLocalUserCmdText(iClientID, wscMsg, set_iLocalChatRange);
@@ -1162,12 +1162,12 @@ void UserCmd_Help(uint iClientID, const wstring &wscParam)
 
 	if (!set_bEnableRenameMe)
 	{
-		PrintUserCmdText(iClientID, L"/renameme <角色名>");
+		PrintUserCmdText(iClientID, L"/renameme <name>");
 	}
 
 	if (!set_bEnableMoveChar)
 	{
-		PrintUserCmdText(iClientID, L"/movechar <角色名> <code>");
+		PrintUserCmdText(iClientID, L"/movechar <name> <code>");
 		PrintUserCmdText(iClientID, L"/set movecharcode <code>");
 	}
 
@@ -1179,9 +1179,9 @@ void UserCmd_Help(uint iClientID, const wstring &wscParam)
 
 	if (set_bEnableGiveCash)
 	{
-		PrintUserCmdText(iClientID, L"/givecash <角色名> <金额>");
-		PrintUserCmdText(iClientID, L"/drawcash <角色名> <code> <金额>");
-		PrintUserCmdText(iClientID, L"/showcash <角色名> <code>");
+		PrintUserCmdText(iClientID, L"/givecash <name> <cash>");
+		PrintUserCmdText(iClientID, L"/drawcash <name> <code> <cash>");
+		PrintUserCmdText(iClientID, L"/showcash <name> <code>");
 		PrintUserCmdText(iClientID, L"/set cashcode <code>");
 	}
 
@@ -1561,15 +1561,15 @@ void CmdHelp_Callback(CCmds* classptr)
 {
 	returncode = DEFAULT_RETURNCODE;
 	classptr->Print(L"move x, y, z\n");
-	classptr->Print(L"pull <角色名>\n");
-	classptr->Print(L"chase <角色名>\n");
+	classptr->Print(L"pull <charname>\n");
+	classptr->Print(L"chase <charname>\n");
 	classptr->Print(L"smiteall [die]\n");
 	classptr->Print(L"testbot <system> <testtime>\n");
-	classptr->Print(L"authchar <角色名>\n");
+	classptr->Print(L"authchar <charname>\n");
 	classptr->Print(L"reloadbans\n");
-	classptr->Print(L"setaccmovecode <角色名> <code>\n");
+	classptr->Print(L"setaccmovecode <charname> <code>\n");
 	classptr->Print(L"rotatelogs\n");
-	classptr->Print(L"privatemsg|pm <角色名> <聊天内容>\n");
+	classptr->Print(L"privatemsg|pm <charname> <text>\n");
 	
 	classptr->Print(L"showtags\n");
 	classptr->Print(L"addtag <tag> <password>\n");

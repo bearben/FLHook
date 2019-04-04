@@ -557,8 +557,10 @@ void UserCmd_InviteID(uint iClientID, const wstring &wscParam)
 
 void UserCmd_Credits(uint iClientID, const wstring &wscParam)
 {
-	PrintUserCmdText(iClientID, L"This server is running FLHook v" VERSION);
-	PrintUserCmdText(iClientID, L"Running plugins:");
+	PrintUserCmdText(iClientID, L"欢迎使用FLHook v" VERSION);
+	PrintUserCmdText(iClientID, L"汉化：Ben");
+	PrintUserCmdText(iClientID, L"宇宙聊天、智能拾取：Ben");
+	PrintUserCmdText(iClientID, L"已加载插件：");
 
 	bool bRunning = false;
 	foreach(lstPlugins,PLUGIN_DATA,it) {
@@ -569,7 +571,7 @@ void UserCmd_Credits(uint iClientID, const wstring &wscParam)
 		PrintUserCmdText(iClientID, L"- %s", stows(it->sName).c_str());
 	}
 	if(!bRunning)
-		PrintUserCmdText(iClientID, L"- none -");
+		PrintUserCmdText(iClientID, L"- 无 -");
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////

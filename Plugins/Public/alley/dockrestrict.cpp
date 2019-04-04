@@ -137,7 +137,7 @@ void ADOCK::Timer()
 		{
 			if (i->second == 0)
 			{
-				wstring wscMsg = L"%time %victim's docking rights have been restored.";
+				wstring wscMsg = L"%time %victim 的停靠权限已恢复。";
 					wscMsg = ReplaceStr(wscMsg, L"%time", GetTimeString(false));
 					wscMsg = ReplaceStr(wscMsg, L"%victim", (const wchar_t*)Players.GetActiveCharacterName(i->first));
 					PrintLocalUserCmdText(i->first, wscMsg, 10000);
@@ -254,7 +254,7 @@ bool ADOCK::NoDockCommand(uint iClientID, const wstring &wscCmd, const wstring &
 					ss << duration;
 					string strduration = ss.str();
 
-					wstring wscMsg = L"%time %victim's docking rights have been removed by %player for minimum %duration seconds";
+					wstring wscMsg = L"%time %victim 的停靠权限已被 %player 剥夺 %duration 秒";
 					wscMsg = ReplaceStr(wscMsg, L"%time", GetTimeString(false));
 					wscMsg = ReplaceStr(wscMsg, L"%player", (const wchar_t*)Players.GetActiveCharacterName(iClientID));
 					wscMsg = ReplaceStr(wscMsg, L"%victim", wscTargetCharname.c_str());
@@ -378,7 +378,7 @@ bool ADOCK::IsDockAllowed(uint iShip, uint iDockTarget, uint iClientID)
 					ss << duration;
 					string strduration = ss.str();
 
-					wstring wscMsg = L"%time %victim's docking rights have been removed by %player for minimum %duration seconds";
+					wstring wscMsg = L"%time %victim 的停靠权限已被 %player 剥夺 %duration 秒";
 					wscMsg = ReplaceStr(wscMsg, L"%time", GetTimeString(false));
 					wscMsg = ReplaceStr(wscMsg, L"%player", cmds->GetAdminName().c_str());
 					wscMsg = ReplaceStr(wscMsg, L"%victim", targetPlyr.wscCharname.c_str());

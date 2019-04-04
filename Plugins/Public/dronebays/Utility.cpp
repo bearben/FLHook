@@ -83,14 +83,14 @@ void Utility::DeployDrone(uint iClientID, const DroneBuildTimerWrapper& timerWra
 	// If the ship doesn't exist, the carrier has docked. This should already be taken care of by the docking hook, but abort anyways.
 	if (!iShip)
 	{
-		PrintUserCmdText(iClientID, L"Info [DroneBays] :: You've docked and somehow managed to skip a Hook. Contact a dev-team FLHooker about this bug please!");
+		PrintUserCmdText(iClientID, L"Info [DroneBays] :: 您由于停靠导致跳过了一个钩子函数。请联系管理员汇报此bug！");
 		ConPrint(L"DRONEBAY: Player %s has triggered Utility::DeployDrone while docked! Report this to an FLHook dev\n");
 		AddLog("DRONEBAY: Player %s has triggered Utility::DeployDrone while docked! Report this to an FLHook dev\n");
 		return;
 	}
 
 	Utility::CreateNPC(iClientID, shipPos, shipRot, shipSys, timerWrapper.reqDrone);
-	PrintUserCmdText(iClientID, L"Info :: Drone Launched");
+	PrintUserCmdText(iClientID, L"无人机信息 :: 无人机已发射");
 	
 	// Log event
 	const wstring charname = reinterpret_cast<const wchar_t*>(Players.GetActiveCharacterName(iClientID));
@@ -99,7 +99,7 @@ void Utility::DeployDrone(uint iClientID, const DroneBuildTimerWrapper& timerWra
 	LogEvent(wstos(logString).c_str());
 
 	// Print launch event to surrounding players
-	wstring wscMsg = L"%user has launched a drone";
+	wstring wscMsg = L"%user 发射了一个无人机";
 	wscMsg = ReplaceStr(wscMsg, L"%user", charname);
 	PrintLocalUserCmdText(iClientID, wscMsg, 10000);
 

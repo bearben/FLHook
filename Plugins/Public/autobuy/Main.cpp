@@ -284,28 +284,28 @@ int HkPlayerAutoBuyGetCount(list<CARGO_INFO> &lstCargo, uint iItemArchID)
 
 void AutobuyInfo(uint iClientID)
 {
-	PrintUserCmdText(iClientID, L"Error: Invalid parameters");
-	PrintUserCmdText(iClientID, L"Usage: /autobuy <param> [<on/off>]");
-	PrintUserCmdText(iClientID, L"<Param>:");
-	PrintUserCmdText(iClientID, L"   info - display current autobuy-settings");
-	PrintUserCmdText(iClientID, L"   missiles - enable/disable autobuy for missiles");
-	PrintUserCmdText(iClientID, L"   torps - enable/disable autobuy for torpedos");
-	PrintUserCmdText(iClientID, L"   mines - enable/disable autobuy for mines");
-	PrintUserCmdText(iClientID, L"   cd - enable/disable autobuy for cruise disruptors");
-	PrintUserCmdText(iClientID, L"   cm - enable/disable autobuy for countermeasures");
-	PrintUserCmdText(iClientID, L"   reload - enable/disable autobuy for nanobots/shield batteries");
-	PrintUserCmdText(iClientID, L"   all: enable/disable autobuy for all of the above");
-	PrintUserCmdText(iClientID, L"Examples:");
-	PrintUserCmdText(iClientID, L"\"/autobuy missiles on\" enable autobuy for missiles");
-	PrintUserCmdText(iClientID, L"\"/autobuy all off\" completely disable autobuy");
-	PrintUserCmdText(iClientID, L"\"/autobuy info\" show autobuy info");
+	PrintUserCmdText(iClientID, L"错误：参数不合法");
+	PrintUserCmdText(iClientID, L"使用方法：/autobuy <选项> [<on/off>]");
+	PrintUserCmdText(iClientID, L"<选项>:");
+	PrintUserCmdText(iClientID, L"   info - 显示当前自动购买的设置");
+	PrintUserCmdText(iClientID, L"   missiles - 开启/关闭 自动购买导弹");
+	PrintUserCmdText(iClientID, L"   torps - 开启/关闭 自动购买鱼雷");
+	PrintUserCmdText(iClientID, L"   mines - 开启/关闭 自动购买地雷");
+	PrintUserCmdText(iClientID, L"   cd - 开启/关闭 自动购买CD弹药");
+	PrintUserCmdText(iClientID, L"   cm - 开启/关闭 自动购买反制弹药");
+	PrintUserCmdText(iClientID, L"   reload - 开启/关闭 自动购买维修和电池补给");
+	PrintUserCmdText(iClientID, L"   all: 开启/关闭 自动购买全部");
+	PrintUserCmdText(iClientID, L"例如:");
+	PrintUserCmdText(iClientID, L"\"/autobuy missiles on\" 开启自动购买导弹");
+	PrintUserCmdText(iClientID, L"\"/autobuy all off\" 关闭所有的自动购买");
+	PrintUserCmdText(iClientID, L"\"/autobuy info\" 显示自动购买信息");
 }
 
 bool  UserCmd_AutoBuy(uint iClientID, const wstring &wscCmd, const wstring &wscParam, const wchar_t *usage)
 {
 	if (!bPluginEnabled)
 	{
-		PrintUserCmdText(iClientID, L"Autobuy is disabled.");
+		PrintUserCmdText(iClientID, L"自动购买已关闭。");
 		return true;
 	}
 
@@ -314,14 +314,14 @@ bool  UserCmd_AutoBuy(uint iClientID, const wstring &wscCmd, const wstring &wscP
 
 	if (!wscType.compare(L"info"))
 	{
-		PrintUserCmdText(iClientID, L"Missiles: %s", mapAutobuyPlayerInfo[iClientID].bAutoBuyMissiles ? L"On" : L"Off");
-		PrintUserCmdText(iClientID, L"Mine: %s", mapAutobuyPlayerInfo[iClientID].bAutoBuyMines ? L"On" : L"Off");
-		PrintUserCmdText(iClientID, L"Torpedos: %s", mapAutobuyPlayerInfo[iClientID].bAutoBuyTorps ? L"On" : L"Off");
-		PrintUserCmdText(iClientID, L"Cruise Disruptors: %s", mapAutobuyPlayerInfo[iClientID].bAutoBuyCD ? L"On" : L"Off");
-		PrintUserCmdText(iClientID, L"Countermeasures: %s", mapAutobuyPlayerInfo[iClientID].bAutoBuyCM ? L"On" : L"Off");
-		PrintUserCmdText(iClientID, L"Munitions: %s", mapAutobuyPlayerInfo[iClientID].bAutobuyMunition ? L"On" : L"Off");
-		PrintUserCmdText(iClientID, L"Cloak Batteries: %s", mapAutobuyPlayerInfo[iClientID].bAutobuyCloak ? L"On" : L"Off");
-		PrintUserCmdText(iClientID, L"Nanobots/Shield Batteries: %s", mapAutobuyPlayerInfo[iClientID].bAutobuyBB ? L"On" : L"Off");
+		PrintUserCmdText(iClientID, L"导弹：%s", mapAutobuyPlayerInfo[iClientID].bAutoBuyMissiles ? L"On" : L"Off");
+		PrintUserCmdText(iClientID, L"地雷：%s", mapAutobuyPlayerInfo[iClientID].bAutoBuyMines ? L"On" : L"Off");
+		PrintUserCmdText(iClientID, L"鱼雷：%s", mapAutobuyPlayerInfo[iClientID].bAutoBuyTorps ? L"On" : L"Off");
+		PrintUserCmdText(iClientID, L"CD：%s", mapAutobuyPlayerInfo[iClientID].bAutoBuyCD ? L"On" : L"Off");
+		PrintUserCmdText(iClientID, L"反制：%s", mapAutobuyPlayerInfo[iClientID].bAutoBuyCM ? L"On" : L"Off");
+		PrintUserCmdText(iClientID, L"弹药：%s", mapAutobuyPlayerInfo[iClientID].bAutobuyMunition ? L"On" : L"Off");
+		PrintUserCmdText(iClientID, L"隐身电池：%s", mapAutobuyPlayerInfo[iClientID].bAutobuyCloak ? L"On" : L"Off");
+		PrintUserCmdText(iClientID, L"维修/护盾电池：%s", mapAutobuyPlayerInfo[iClientID].bAutobuyBB ? L"On" : L"Off");
 		return true;
 	}
 
@@ -426,7 +426,7 @@ void CheckforStackables(uint iClientID)
 				{
 					wstring wscCharname = (const wchar_t*)Players.GetActiveCharacterName(iClientID);
 					//ConPrint(L"DEBUG: player %s, iCount %d, ammo %d, tempmap %d \n", wscCharname.c_str(), item->iCount, mapAmmolimits[ammo], tempmap[ita->first]);
-					PrintUserCmdText(iClientID, L"You have lost some ammo because you had more than you should have.");
+					PrintUserCmdText(iClientID, L"您的弹药超出了上限，一部分被移除。");
 
 					pub::Player::RemoveCargo(iClientID, item->sID, (item->iCount - (mapAmmolimits[ammo] * tempmap[ita->first])) );
 				}
@@ -477,14 +477,14 @@ void PlayerAutobuy(uint iClientID, uint iBaseID)
 			if ((*it).iArchID == iNanobotsID) {
 				aci.iArchID = iNanobotsID;
 				aci.iCount = ship->iMaxNanobots - (*it).iCount;
-				aci.wscDescription = L"Nanobots";
+				aci.wscDescription = L"维修机器人";
 				lstCart.push_back(aci);
 				bNanobotsFound = true;
 			}
 			else if ((*it).iArchID == iShieldBatsID) {
 				aci.iArchID = iShieldBatsID;
 				aci.iCount = ship->iMaxShieldBats - (*it).iCount;
-				aci.wscDescription = L"Shield Batteries";
+				aci.wscDescription = L"护盾电池";
 				lstCart.push_back(aci);
 				bShieldBattsFound = true;
 			}
@@ -495,7 +495,7 @@ void PlayerAutobuy(uint iClientID, uint iBaseID)
 			AUTOBUY_CARTITEM aci;
 			aci.iArchID = iNanobotsID;
 			aci.iCount = ship->iMaxNanobots;
-			aci.wscDescription = L"Nanobots";
+			aci.wscDescription = L"维修机器人";
 			lstCart.push_back(aci);
 		}
 
@@ -504,7 +504,7 @@ void PlayerAutobuy(uint iClientID, uint iBaseID)
 			AUTOBUY_CARTITEM aci;
 			aci.iArchID = iShieldBatsID;
 			aci.iCount = ship->iMaxShieldBats;
-			aci.wscDescription = L"Shield Batteries";
+			aci.wscDescription = L"护盾电池";
 			lstCart.push_back(aci);
 		}
 	}
@@ -553,12 +553,12 @@ void PlayerAutobuy(uint iClientID, uint iBaseID)
 			if (eq_type == ET_MINE)
 			{
 				if (mapAutobuyPlayerInfo[iClientID].bAutoBuyMines)
-					ADD_EQUIP_TO_CART(L"Mines")
+					ADD_EQUIP_TO_CART(L"地雷")
 			}
 			else if (eq_type == ET_CM)
 			{
 				if (mapAutobuyPlayerInfo[iClientID].bAutoBuyCM)
-					ADD_EQUIP_TO_CART(L"Countermeasures")
+					ADD_EQUIP_TO_CART(L"反制")
 			}
 			else if (eq_type == ET_TORPEDO)
 			{
@@ -566,18 +566,18 @@ void PlayerAutobuy(uint iClientID, uint iBaseID)
 				{
 					if (mapStackableItems.find(eq->get_id()) != mapStackableItems.end())
 					{
-						ADD_EQUIP_TO_CART_STACKABLE(L"Torpedos")
+						ADD_EQUIP_TO_CART_STACKABLE(L"鱼雷")
 					}
 					else
 					{
-						ADD_EQUIP_TO_CART(L"Torpedos")
+						ADD_EQUIP_TO_CART(L"鱼雷")
 					}
 				}
 			}
 			else if (eq_type == ET_CD)
 			{
 				if (mapAutobuyPlayerInfo[iClientID].bAutoBuyCD)
-					ADD_EQUIP_TO_CART(L"Cruise Disruptors")
+					ADD_EQUIP_TO_CART(L"CD")
 			}
 			else if (eq_type == ET_MISSILE)
 			{
@@ -585,11 +585,11 @@ void PlayerAutobuy(uint iClientID, uint iBaseID)
 				{
 					if (mapStackableItems.find(eq->get_id()) != mapStackableItems.end())
 					{
-						ADD_EQUIP_TO_CART_STACKABLE(L"Missiles")
+						ADD_EQUIP_TO_CART_STACKABLE(L"导弹")
 					}
 					else
 					{
-						ADD_EQUIP_TO_CART(L"Missiles")
+						ADD_EQUIP_TO_CART(L"导弹")
 					}
 				}
 			}
@@ -599,11 +599,11 @@ void PlayerAutobuy(uint iClientID, uint iBaseID)
 				{
 					if (mapStackableItems.find(eq->get_id()) != mapStackableItems.end())
 					{
-						ADD_EQUIP_TO_CART_STACKABLE(L"Munitions")
+						ADD_EQUIP_TO_CART_STACKABLE(L"弹药")
 					}
 					else
 					{
-						ADD_EQUIP_TO_CART(L"Munitions")
+						ADD_EQUIP_TO_CART(L"弹药")
 					}
 				}
 			}
@@ -613,7 +613,7 @@ void PlayerAutobuy(uint iClientID, uint iBaseID)
 			{
 				//Cloak Fuel
 				if (mapAutobuyPlayerInfo[iClientID].bAutobuyCloak)
-					ADD_EQUIP_TO_CART_FLHOOK(L"Cloak Batteries")
+					ADD_EQUIP_TO_CART_FLHOOK(L"隐身电池")
 			}
 		}
 	}
@@ -689,7 +689,7 @@ void PlayerAutobuy(uint iClientID, uint iBaseID)
 
 		int iCost = ((int)fPrice * (*it4).iCount);
 		if (iCash < iCost)
-			PrintUserCmdText(iClientID, L"Auto-Buy(%s): FAILED! Insufficient Credits", (*it4).wscDescription.c_str());
+			PrintUserCmdText(iClientID, L"自动购买（%s）：失败！现金不足", (*it4).wscDescription.c_str());
 		else {
 			HkAddCash(ARG_CLIENTID(iClientID), -iCost);
 			iCash -= iCost;
@@ -705,7 +705,7 @@ void PlayerAutobuy(uint iClientID, uint iBaseID)
 
 			if ((*it4).iCount != 0)
 			{
-				PrintUserCmdText(iClientID, L"Auto-Buy(%s): Bought %d unit(s), cost: %s$", (*it4).wscDescription.c_str(), (*it4).iCount, ToMoneyStr(iCost).c_str());
+				PrintUserCmdText(iClientID, L"自动购买（%s）：购买了 %d 单位，价值：%s 星币", (*it4).wscDescription.c_str(), (*it4).iCount, ToMoneyStr(iCost).c_str());
 			}
 		}
 	}

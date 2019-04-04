@@ -116,24 +116,24 @@ namespace SystemSensor
 
 		if (!mapInfo[iClientID].iAvailableNetworkID)
 		{
-			PrintUserCmdText(iClientID, L"ERR Sensor network monitoring is not available");
+			PrintUserCmdText(iClientID, L"错误：无法连入通道环监控网络");
 			mapInfo[iClientID].iMode = MODE_OFF;
 			return true;
 		}
 
 		if (wscMode==L"all")
 		{
-			PrintUserCmdText(iClientID, L"OK Sensor network monitoring all traffic");
+			PrintUserCmdText(iClientID, L"已开启通道环和跳跃门监控");
 			mapInfo[iClientID].iMode = MODE_JUMPGATE | MODE_TRADELANE;
 		}
 		else if (wscMode==L"jumponly")
 		{
-			PrintUserCmdText(iClientID, L"OK Sensor network monitoring jumpgate traffic only");
+			PrintUserCmdText(iClientID, L"已开启跳跃门监控");
 			mapInfo[iClientID].iMode = MODE_JUMPGATE;
 		}
 		else
 		{
-			PrintUserCmdText(iClientID, L"OK Sensor network monitoring disabled");
+			PrintUserCmdText(iClientID, L"已关闭通道环监控");
 			mapInfo[iClientID].iMode = MODE_OFF;
 		}
 		return true;
@@ -170,7 +170,7 @@ namespace SystemSensor
 			uint iTargetClientID = HkGetClientIDFromArg(wscTargetCharname);
 			if (iTargetClientID == -1)
 			{
-				PrintUserCmdText(iClientID, L"ERR Target not found");
+				PrintUserCmdText(iClientID, L"错误：没有选中目标");
 				return true;
 			}
 
@@ -180,7 +180,7 @@ namespace SystemSensor
 				|| !iterTargetClientID->second.iLastScanNetworkID
 				|| mapInfo[iClientID].iAvailableNetworkID != iterTargetClientID->second.iLastScanNetworkID)
 			{
-				PrintUserCmdText(iClientID, L"ERR Scan data not available");
+				PrintUserCmdText(iClientID, L"错误：无法获得扫描数据");
 				return true;
 			}
 
@@ -268,9 +268,9 @@ namespace SystemSensor
 			if (HasRestrictedAccess) { 
 				PrintUserCmdText(iClientID, L"C0nn3c710n 70 7r4d3l4n3 53n50r n37w0rk 3574bl15h3d. 7yp3 /net 70 4cc355 n37w0rk.");}
 			else if (iAvailableNetworkID) {
-				PrintUserCmdText(iClientID, L"Connection to tradelane sensor network established. Type /net to access network.");}
+				PrintUserCmdText(iClientID, L"通道环监控网络已建立，输入/net指令连接监控网络。");}
 			else {
-				PrintUserCmdText(iClientID, L"Connection to tradelane sensor network lost.");}
+				PrintUserCmdText(iClientID, L"通道环监控网络连接已断开。");}
 		}
 	}
 
@@ -359,17 +359,17 @@ namespace SystemSensor
 		if (mapInfo[iClientID].bInJumpGate)
 		{
 			mapInfo[iClientID].bInJumpGate = false;
-			DumpSensorAccess(iClientID, L"exited jumpgate", MODE_JUMPGATE);		
+			DumpSensorAccess(iClientID, L"离开跳跃门", MODE_JUMPGATE);		
 		}
 	}
 
 	void GoTradelane(unsigned int iClientID, struct XGoTradelane const &xgt)
 	{
-		DumpSensorAccess(iClientID, L"entered tradelane", MODE_TRADELANE);		
+		DumpSensorAccess(iClientID, L"进入通道环", MODE_TRADELANE);		
 	}
 
 	void StopTradelane(unsigned int iClientID, unsigned int p1, unsigned int p2, unsigned int p3)
 	{
-		DumpSensorAccess(iClientID, L"exited tradelane", MODE_TRADELANE);
+		DumpSensorAccess(iClientID, L"离开通道环", MODE_TRADELANE);
 	}
 }

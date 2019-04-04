@@ -284,7 +284,7 @@ namespace GiveCash
 			return true;
 		}
 		if (cash<set_iMinTransfer || cash<0) {
-			PrintUserCmdText(iClientID, L"错误：转账金额过小，最低额度为 " + ToMoneyStr(set_iMinTransfer));
+			PrintUserCmdText(iClientID, L"错误：转账金额过小，最低额度为 " + ToMoneyStr(set_iMinTransfer) + L"星币");
 			return true;
 		}
 		if (iCash<cash)
@@ -405,9 +405,9 @@ namespace GiveCash
 		// telling them that they've received the cash.
 		wstring msg;
 		if (bAnon)
-			msg += L"您收到匿名的 " + ToMoneyStr(cash) + L" 转账";
+			msg += L"您收到匿名的 " + ToMoneyStr(cash) + L" 星币";
 		else
-			msg = L"您收到来自 " + wscCharname + L" 的 " + ToMoneyStr(cash) + L" 转账";
+			msg = L"您收到来自 " + wscCharname + L" 的 " + ToMoneyStr(cash) + L" 星币";
 		if (targetClientId != -1 && !HkIsInCharSelectMenu(targetClientId))
 		{
 			PrintUserCmdText(targetClientId, L"%s", msg.c_str());
@@ -419,9 +419,9 @@ namespace GiveCash
 		{
 			wstring msg;
 			if (bAnon)
-				msg += L"您收到匿名的 " + ToMoneyStr(cash) + L" 转账";
+				msg += L"您收到匿名的 " + ToMoneyStr(cash) + L" 星币";
 			else
-				msg = L"您收到来自 " + wscCharname + L" 的 " + ToMoneyStr(cash) + L" 转账";
+				msg = L"您收到来自 " + wscCharname + L" 的 " + ToMoneyStr(cash) + L" 星币";
 			LogTransfer(wscTargetCharname, msg);
 		}
 
@@ -431,7 +431,7 @@ namespace GiveCash
 			wstos(wscTargetCharname).c_str(), wstos(HkGetAccountID(HkGetAccountByCharname(wscTargetCharname))).c_str());
 
 		// A friendly message explaining the transfer.
-		msg = L"您成功将 " + ToMoneyStr(cash) + L" 现金";
+		msg = L"您成功将 " + ToMoneyStr(cash) + L" 星币";
 		if (bAnon)
 			msg += L"匿名地";
 		msg = msg + L"转账给 " + wscTargetCharname; 
@@ -512,7 +512,7 @@ namespace GiveCash
 			return true;
 		}
 
-		PrintUserCmdText(iClientID, L"角色 "+wscTargetCharname+L" 的账户有 " + ToMoneyStr(iCash) + L" 现金");
+		PrintUserCmdText(iClientID, L"角色 "+wscTargetCharname+L" 的账户有 " + ToMoneyStr(iCash) + L" 星币");
 		return true;
 	}
 
@@ -577,14 +577,14 @@ namespace GiveCash
 		}
 
 		if (cash<set_iMinTransfer || cash<0) {
-			PrintUserCmdText(iClientID, L"错误：转账金额过小，最低额度为 "+ToMoneyStr(set_iMinTransfer));
+			PrintUserCmdText(iClientID, L"错误：转账金额过小，最低额度为 "+ToMoneyStr(set_iMinTransfer) + L"星币");
 			return true;
 		}
 
 		int tCash = 0;
 		if ((err = HkGetCash(wscTargetCharname, tCash)) != HKE_OK)
 		{
-			PrintUserCmdText(iClientID, L"ERR "+HkErrGetText(err));
+			PrintUserCmdText(iClientID, L"错误："+HkErrGetText(err));
 			return true;
 		}
 		if (tCash<cash)
@@ -647,7 +647,7 @@ namespace GiveCash
 		// Remove cash from target character
 		if ((err = HkAddCash(wscTargetCharname, 0-cash)) != HKE_OK)
 		{
-			PrintUserCmdText(iClientID, L"ERR "+HkErrGetText(err));
+			PrintUserCmdText(iClientID, L"错误："+HkErrGetText(err));
 			return true;
 		}
 
@@ -698,7 +698,7 @@ namespace GiveCash
 
 		// If the target player is online then send them a message saying
 		// telling them that they've received transfered cash.
-		wstring msg = L"您成功将 " + ToMoneyStr(cash) + L" 现金转账给 " + wscCharname;
+		wstring msg = L"您成功将 " + ToMoneyStr(cash) + L" 星币转账给 " + wscCharname;
 		if (targetClientId!=-1 && !HkIsInCharSelectMenu(targetClientId))
 		{
 			PrintUserCmdText(targetClientId, L"%s", msg.c_str());
@@ -717,7 +717,7 @@ namespace GiveCash
 			wstos(wscCharname).c_str(), wstos(HkGetAccountID(HkGetAccountByCharname(wscCharname))).c_str());
 
 		// A friendly message explaining the transfer.
-		msg = GetTimeString(set_bLocalTime) + L": 您从 " + wscTargetCharname + L" 取走了 " + ToMoneyStr(cash) + L" 现金";
+		msg = GetTimeString(set_bLocalTime) + L": 您从 " + wscTargetCharname + L" 取走了 " + ToMoneyStr(cash) + L" 星币";
 		PrintUserCmdText(iClientID, L"%s", msg.c_str());
 		return true;
 	}

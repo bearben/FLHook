@@ -182,7 +182,7 @@ void __stdcall GFGoodBuy(struct SGFGoodBuyInfo const &gbi, unsigned int iClientI
 			{
 				//deny the purchase
 				returncode = SKIPPLUGINS_NOFUNCTIONCALL;
-				PrintUserCmdText(iClientID, L"Sorry, you do not have permission to buy this item.");
+				PrintUserCmdText(iClientID, L"您没有购买此物品的权限。");
 				mapBuySuppression[iClientID] = true;
 				return;
 			}
@@ -192,7 +192,7 @@ void __stdcall GFGoodBuy(struct SGFGoodBuyInfo const &gbi, unsigned int iClientI
 		{
 			//deny the purchase
 			returncode = SKIPPLUGINS_NOFUNCTIONCALL;
-			PrintUserCmdText(iClientID, L"Your ship is not initialized. Please undock once to initialize your server variables.");
+			PrintUserCmdText(iClientID, L"您的飞船没有被初始化，请驶出空间站以初始化。");
 			mapBuySuppression[iClientID] = true;
 			return;
 		}

@@ -15,7 +15,7 @@ void Timers::processDroneDockRequests(map<uint, DroneDespawnWrapper>& despawnLis
 		if (shipDistance < (carrierRadius + 100))
 		{
 			pub::SpaceObj::Destroy(dt->second.droneObj, DestroyType::VANISH);
-			PrintUserCmdText(dt->first, L"Drone docked");
+			PrintUserCmdText(dt->first, L"无人机已停靠");
 			despawnList.erase(dt->first);
 			clientDroneInfo.erase(dt->first);
 
@@ -40,7 +40,7 @@ void Timers::processDroneBuildRequests(map<uint, DroneBuildTimerWrapper>& buildL
 		const ENGINE_STATE engineState = HkGetEngineState(dt->first);
 		if(engineState == ES_TRADELANE || engineState == ES_CRUISE)
 		{
-			PrintUserCmdText(dt->first, L"Engine state inoppertune for drone deployment, aborting launch");
+			PrintUserCmdText(dt->first, L"巡航或通道环中无法发射无人机，发射已取消");
 			clientDroneInfo[dt->first].buildState = STATE_DRONE_OFF;
 			buildTimerMap.erase(dt);
 		}

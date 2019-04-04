@@ -583,7 +583,7 @@ namespace HyperJump
 				if (jumpsyslist.nickname == iSystemID) 
 				{
 				PrintUserCmdText(iClientID, L"The script has found %s !", wscSysName.c_str());
-				PrintUserCmdText(iClientID, L"You are allowed to jump to:");
+				PrintUserCmdText(iClientID, L"您可以跳跃到：");
 			
 					for (map<uint, uint>::iterator i = jumpsyslist.mapSystemsList.begin(); i != jumpsyslist.mapSystemsList.end(); ++i) 
 					{
@@ -596,7 +596,7 @@ namespace HyperJump
 		}
 		else
 		{
-			PrintUserCmdText(iClientID, L"Jump System Whitelisting is not enabled.");	
+			PrintUserCmdText(iClientID, L"跳跃星系白名单没有启用。");	
 		}
 		return true;
 	}
@@ -661,9 +661,9 @@ namespace HyperJump
 		// Encrypt it
 		char obuf[HCOORD_SIZE];
 		EncryptDecrypt(ibuf, obuf);
-		PrintUserCmdText(adminPlyr.iClientID, L"Hyperspace survey complete");
+		PrintUserCmdText(adminPlyr.iClientID, L"超空间定位完毕");
 		//PrintUserCmdText(iClientID, L"Raw: %s", FormatCoords(ibuf).c_str());		
-		PrintUserCmdText(adminPlyr.iClientID, L"Coords: %s", FormatCoords(obuf).c_str());
+		PrintUserCmdText(adminPlyr.iClientID, L"坐标：%s", FormatCoords(obuf).c_str());
 
 		return;
 	}
@@ -683,7 +683,7 @@ namespace HyperJump
 				if (bc.timeleft <= 0)
 				{
 					IObjInspectImpl *obj = HkGetInspect(i->first);
-					PrintUserCmdText(i->first, L"Hyperspace beacon has decayed.");
+					PrintUserCmdText(i->first, L"超空间信标已消失。");
 					bc.decayed = true;
 					HkUnLightFuse((IObjRW*)obj, BeaconFuse, 0);
 				}
@@ -695,7 +695,7 @@ namespace HyperJump
 
 			if (bc.cooldown == 0)
 			{
-				PrintUserCmdText(i->first, L"Hyperspace beacon cooldown complete.");
+				PrintUserCmdText(i->first, L"超空间信标冷却完毕。");
 				mapActiveBeacons.erase(i->first);
 			}
 			else
@@ -751,7 +751,7 @@ namespace HyperJump
 					if (!sm.charging_on)
 					{
 						sm.curr_charge = 0;
-						PrintUserCmdText(iClientID, L"Survey failed");
+						PrintUserCmdText(iClientID, L"定位失败");
 						continue;
 					}
 
@@ -783,15 +783,15 @@ namespace HyperJump
 						// Encrypt it
 						char obuf[HCOORD_SIZE];
 						EncryptDecrypt(ibuf, obuf);
-						PrintUserCmdText(iClientID, L"Hyperspace survey complete");
+						PrintUserCmdText(iClientID, L"超空间定位完毕");
 						//PrintUserCmdText(iClientID, L"Raw: %s", FormatCoords(ibuf).c_str());		
-						PrintUserCmdText(iClientID, L"Coords: %s", FormatCoords(obuf).c_str());
+						PrintUserCmdText(iClientID, L"坐标：%s", FormatCoords(obuf).c_str());
 
 						lstOldClients.push_back(iClientID);
 					}
 					else if (time(0) % 10 == 0)
 					{
-						PrintUserCmdText(iClientID, L"Survey %0.0f%% complete", (sm.curr_charge/sm.arch.survey_complete_charge)*100.0f);				
+						PrintUserCmdText(iClientID, L"定位已完成 %0.0f%%", (sm.curr_charge/sm.arch.survey_complete_charge)*100.0f);				
 					}
 				}
 			}
@@ -832,7 +832,7 @@ namespace HyperJump
 				{
 					if (setCloakingClients.find(iClientID) != setCloakingClients.end())
 					{
-						PrintUserCmdText(iClientID, L"ERR Ship is cloaked.");
+						PrintUserCmdText(iClientID, L"错误：飞船处于隐身。");
 						SetFuse(iClientID, 0);
 						StopChargeFuses(iClientID);
 						jd.jump_timer = 0;
@@ -869,7 +869,7 @@ namespace HyperJump
 						wstring playershiparch = stows(ship->szName);
 						if (mapRestrictedShips.find(playershiparch) != mapRestrictedShips.end() && JumpWhiteListEnabled == 1) 
 						{
-							PrintUserCmdText(iClientID, L"ERR Ship is not allowed to jump."); 
+							PrintUserCmdText(iClientID, L"错误：此飞船无法使用跳跃引擎。"); 
 						}
 						else 
 						{
@@ -898,12 +898,12 @@ namespace HyperJump
 									wstring playershiparch = stows(ship->szName);
 									if (mapRestrictedShips.find(playershiparch) != mapRestrictedShips.end() && JumpWhiteListEnabled == 1) 
 									{
-										PrintUserCmdText(pPD->iOnlineID, L"ERR Ship is not allowed to jump."); 
+										PrintUserCmdText(pPD->iOnlineID, L"错误：此飞船无法使用跳跃引擎。"); 
 									}
 									else 
 									{
 									//PrintUserCmdText(pPD->iOnlineID, playershiparch);
-									PrintUserCmdText(pPD->iOnlineID, L"Jumping...");
+									PrintUserCmdText(pPD->iOnlineID, L"跳跃引擎充能……");
 
 									if (HookExt::IniGetB(iClientID, "event.enabled"))
 									{
@@ -913,7 +913,7 @@ namespace HyperJump
 										HookExt::IniSetB(iClientID, "event.enabled", false);
 										HookExt::IniSetWS(iClientID, "event.eventid", L"");
 										HookExt::IniSetI(iClientID, "event.quantity", 0);
-										PrintUserCmdText(iClientID, L"You have been unregistered from the event.");
+										PrintUserCmdText(iClientID, L"您已经脱离活动。");
 									}
 
 									Vector vNewTargetPosition;
@@ -972,7 +972,7 @@ namespace HyperJump
 
 					if (setCloakingClients.find(iClientID) != setCloakingClients.end())
 					{
-						PrintUserCmdText(iClientID, L"ERR Ship is cloaked.");
+						PrintUserCmdText(iClientID, L"错误：飞船处于隐身");
 						pub::Player::SendNNMessage(iClientID, pub::GetNicknameId("nnv_jumpdrive_charging_failed"));
 						SetFuse(iClientID, 0);
 						StopChargeFuses(iClientID);
@@ -998,7 +998,7 @@ namespace HyperJump
 					// skip to the next player.
 					if (!jd.charging_on)
 					{
-						PrintUserCmdText(iClientID, L"Jump drive charging failed");				
+						PrintUserCmdText(iClientID, L"跳跃引擎充能失败");
 						pub::Player::SendNNMessage(iClientID, pub::GetNicknameId("nnv_jumpdrive_charging_failed"));
 						SetFuse(iClientID, 0);
 						StopChargeFuses(iClientID);
@@ -1012,7 +1012,7 @@ namespace HyperJump
 						jd.curr_charge = jd.arch.can_jump_charge;
 						if (!jd.charging_complete)
 						{
-							PrintUserCmdText(iClientID, L"Jump drive charging complete, ready to jump");				
+							PrintUserCmdText(iClientID, L"跳跃引擎充能完成，随时可以跳跃");
 							pub::Player::SendNNMessage(iClientID, pub::GetNicknameId("nnv_jumpdrive_charging_complete"));
 							jd.charging_complete = true;
 						}
@@ -1027,7 +1027,7 @@ namespace HyperJump
 					if (jd.charge_status != expected_charge_status)
 					{
 						jd.charge_status = expected_charge_status;
-						PrintUserCmdText(iClientID, L"Jump drive charge %0.0f%%", (jd.curr_charge/jd.arch.can_jump_charge)*100.0f);
+						PrintUserCmdText(iClientID, L"跳跃引擎充能 %0.0f%%", (jd.curr_charge/jd.arch.can_jump_charge)*100.0f);
 						
 						// Find the currently expected charge fuse
 						uint charge_fuse_idx = (uint)((jd.curr_charge/jd.arch.can_jump_charge) * (jd.arch.charge_fuse.size() - 1));
@@ -1616,13 +1616,13 @@ namespace HyperJump
 		IObjInspectImpl *obj = HkGetInspect(iClientID);
 		if (!obj)
 		{
-			PrintUserCmdText(iClientID, L"Survey module not available");
+			PrintUserCmdText(iClientID, L"未找到超空间定位模块");
 			return true;
 		}
 
 		if (!InitSurveyInfo(iClientID))
 		{
-			PrintUserCmdText(iClientID, L"Survey module not available");			
+			PrintUserCmdText(iClientID, L"未找到超空间定位模块");			
 			return true;
 		}
 
@@ -1631,14 +1631,14 @@ namespace HyperJump
 		CShip* cship = (CShip*)HkGetEqObjFromObjRW((IObjRW*)obj);
 		if (cship->get_max_power() < sm.arch.power)
 		{
-			PrintUserCmdText(iClientID, L"Insufficient power to start survey module");			
+			PrintUserCmdText(iClientID, L"能量不足以启动定位模块");
 			return true;
 		}
 
 		HKPLAYERINFO p;
 		if (HkGetPlayerInfo((const wchar_t*) Players.GetActiveCharacterName(iClientID), p, false)!=HKE_OK || p.iShip==0)
 		{
-			PrintUserCmdText(iClientID, L"ERR Not in space");
+			PrintUserCmdText(iClientID, L"错误：不在太空中");
 			return true;
 		}
 
@@ -1650,20 +1650,20 @@ namespace HyperJump
 		////////////////////////// x up / x down from plane ///////////////////////////////////////
 		if (pos.y >= SurveyPlaneLimit || pos.y <= -SurveyPlaneLimit)
 		{
-			PrintUserCmdText(iClientID, L"ERR Distance from stellar plane too far, unable to compensate for galactic drift. Move within %u of stellar plane.", SurveyPlaneLimit);
+			PrintUserCmdText(iClientID, L"错误：距离星系平面太远，无法进行测绘。请移动至距离星系平面 %u 以内的位置。", SurveyPlaneLimit);
 			return true;
 		}
 		// Toogle the charge state
 		sm.charging_on = !sm.charging_on;
 		if (sm.charging_on)
 		{
-			PrintUserCmdText(iClientID, L"Survey started");			
+			PrintUserCmdText(iClientID, L"超空间定位已开始");
 			sm.curr_charge = 0;
 			return true;
 		}
 		else
 		{
-			PrintUserCmdText(iClientID, L"Survey aborted");			
+			PrintUserCmdText(iClientID, L"超空间定位已取消");			
 			sm.curr_charge = 0;
 			return true;
 		}
@@ -1673,7 +1673,7 @@ namespace HyperJump
 	{
 		if (!InitJumpDriveInfo(iClientID))
 		{
-			PrintUserCmdText(iClientID, L"Jump drive not available");			
+			PrintUserCmdText(iClientID, L"未找到跳跃引擎");
 			return true;
 		}
 
@@ -1685,7 +1685,7 @@ namespace HyperJump
 		{
 			jd.rekt = true;
 			wstring wscCharname = (const wchar_t*) Players.GetActiveCharacterName(iClientID);
-			wstring wscMsgU = L"%name has been permabanned. (Type 5)";
+			wstring wscMsgU = L"%name 已经被永久封禁。(Type 5)";
 			wscMsgU = ReplaceStr(wscMsgU, L"%name", wscCharname.c_str());
 			HkMsgU(wscMsgU);
 
@@ -1697,7 +1697,7 @@ namespace HyperJump
 		string sbuf = wstos(ReplaceStr(GetParam(wscParam, L' ', 0), L"-", L""));
 		if (sbuf.size() != 56)
 		{
-			PrintUserCmdText(iClientID, L"ERR Invalid coordinates, format error");
+			PrintUserCmdText(iClientID, L"错误：坐标不合法，格式错误");
 			return true;
 		}
 
@@ -1724,13 +1724,13 @@ namespace HyperJump
 
 		if (coords.parity != parity)
 		{
-			PrintUserCmdText(iClientID, L"ERR Invalid coordinates, parity error");
+			PrintUserCmdText(iClientID, L"错误：坐标不合法，校验失败");
 			return true;
 		}
 	
 		if (coords.time < time(0))
 		{
-			PrintUserCmdText(iClientID, L"Warning old coordinates detected. Jump not recommended");
+			PrintUserCmdText(iClientID, L"警告：检测到过期坐标。");
 			coords.accuracy *= rand()%6 + 1;
 		}
 		
@@ -1740,7 +1740,7 @@ namespace HyperJump
 		jd.vTargetPosition.z = coords.z;
 
 		const struct Universe::ISystem *sysinfo = Universe::get_system(jd.iTargetSystem);
-		PrintUserCmdText(iClientID, L"OK Coordinates verified: %s %0.0f.%0.0f.%0.0f",
+		PrintUserCmdText(iClientID, L"坐标已确认：%s %0.0f.%0.0f.%0.0f",
 			HkGetWStringFromIDS(sysinfo->strid_name).c_str(),
 			*(float*)&jd.vTargetPosition.x,
 			*(float*)&jd.vTargetPosition.y,
@@ -1760,14 +1760,14 @@ namespace HyperJump
 		IObjInspectImpl *obj = HkGetInspect(iClientID);
 		if (!obj)
 		{
-			PrintUserCmdText(iClientID, L"Jump drive charging failed");			
+			PrintUserCmdText(iClientID, L"跳跃引擎充能失败");
 			pub::Player::SendNNMessage(iClientID, pub::GetNicknameId("nnv_jumpdrive_charging_failed"));
 			return true;
 		}
 
 		if (!InitJumpDriveInfo(iClientID))
 		{
-			PrintUserCmdText(iClientID, L"Jump drive not available");			
+			PrintUserCmdText(iClientID, L"未找到跳跃引擎");
 			pub::Player::SendNNMessage(iClientID, pub::GetNicknameId("nnv_jumpdrive_charging_failed"));
 			return true;
 		}
@@ -1777,7 +1777,7 @@ namespace HyperJump
 		CShip* cship = (CShip*)HkGetEqObjFromObjRW((IObjRW*)obj);
 		if (cship->get_max_power() < jd.arch.power)
 		{
-			PrintUserCmdText(iClientID, L"Insufficient power to charge jumpdrive");			
+			PrintUserCmdText(iClientID, L"能量不足以启动跳跃引擎");
 			pub::Player::SendNNMessage(iClientID, pub::GetNicknameId("nnv_jumpdrive_charging_failed"));
 			return true;
 		}
@@ -1795,7 +1795,7 @@ namespace HyperJump
 		{
 			if (jd.iTargetSystem == 0)
 			{
-				PrintUserCmdText(iClientID, L"WARNING NO JUMP COORDINATES");			
+				PrintUserCmdText(iClientID, L"警告：未设置跳跃坐标");
 				pub::Player::SendNNMessage(iClientID, pub::GetNicknameId("nnv_jumpdrive_blind_jump_warning"));
 			}
 		////////////////////////// System limit restriction ///////////////////////////////////////
@@ -1830,8 +1830,8 @@ namespace HyperJump
 					{
 							const Universe::ISystem *iSysList = Universe::get_system(jd.iTargetSystem);
 							wstring wscSysNameList = HkGetWStringFromIDS(iSysList->strid_name);
-							PrintUserCmdText(iClientID, L"ERROR: Gravitational rift detected. Cannot jump to %s from this system.", wscSysNameList.c_str() );
-							PrintUserCmdText(iClientID, L"Jump drive disabled. Use /jumpsys for the list of available systems.");
+							PrintUserCmdText(iClientID, L"错误：检测到重力裂缝。无法从此星系跳跃至 %s 。", wscSysNameList.c_str() );
+							PrintUserCmdText(iClientID, L"跳跃引擎关闭。输入指令/jumpsys可以查看可以跳跃的星系。");
 							jd.charging_complete = false;
 							jd.curr_charge = 0.0;
 							jd.charging_on = false;
@@ -1849,9 +1849,9 @@ namespace HyperJump
 		////////////////////////// End of System limit restriction ///////////////////////////////////////
 			
 			pub::Player::SendNNMessage(iClientID, pub::GetNicknameId("nnv_jumpdrive_charging"));
-			PrintUserCmdText(iClientID, L"Jump drive charging");
+			PrintUserCmdText(iClientID, L"跳跃引擎充能");
 			// Print out a message within the iLocalChatRange when a player engages a JD.
-			wstring wscMsg = L"%time WARNING: A hyperspace breach is being opened by %player";
+			wstring wscMsg = L"%time 警告：%player 正在开启超空间裂缝";
 			wscMsg = ReplaceStr(wscMsg, L"%time", GetTimeString(set_bLocalTime));
 			wscMsg = ReplaceStr(wscMsg, L"%player", (const wchar_t*)Players.GetActiveCharacterName(iClientID));
 			PrintLocalUserCmdText(iClientID, wscMsg, set_iLocalChatRange);
@@ -1859,7 +1859,7 @@ namespace HyperJump
 		// Cancel jump effect if it is running
 		else
 		{
-			PrintUserCmdText(iClientID, L"Jump drive disabled");
+			PrintUserCmdText(iClientID, L"跳跃引擎关闭");
 			StopChargeFuses(iClientID);
 			SetFuse(iClientID, 0);
 		}
@@ -1873,7 +1873,7 @@ namespace HyperJump
 		IObjInspectImpl *obj = HkGetInspect(iClientID);
 		if (!obj)
 		{
-			PrintUserCmdText(iClientID, L"Jump drive charging failed");			
+			PrintUserCmdText(iClientID, L"跳跃引擎充能失败");
 			pub::Player::SendNNMessage(iClientID, pub::GetNicknameId("nnv_jumpdrive_charging_failed"));
 			return true;
 		}
@@ -1881,7 +1881,7 @@ namespace HyperJump
 		// If no jumpdrive, report a warning.
 		if (!InitJumpDriveInfo(iClientID))
 		{
-			PrintUserCmdText(iClientID, L"Jump drive not ready");			
+			PrintUserCmdText(iClientID, L"未装备跳跃引擎");
 			pub::Player::SendNNMessage(iClientID, pub::GetNicknameId("nnv_jumpdrive_charging_failed"));
 			return true;
 		}
@@ -1891,15 +1891,15 @@ namespace HyperJump
 		// If insufficient charging, report a warning
 		if (!jd.charging_complete)
 		{
-			PrintUserCmdText(iClientID, L"Jump drive not ready");			
+			PrintUserCmdText(iClientID, L"跳跃引擎尚未充能完毕，请稍后");
 			pub::Player::SendNNMessage(iClientID, pub::GetNicknameId("nnv_jumpdrive_not_ready"));
 			return true;
 		}
 
 		if (jd.iTargetSystem == 0)
 		{
-			PrintUserCmdText(iClientID, L"WARNING NO JUMP COORDINATES");
-			PrintUserCmdText(iClientID, L"BLIND JUMP ACTIVATED");
+			PrintUserCmdText(iClientID, L"警告：未设置跳跃坐标");
+			PrintUserCmdText(iClientID, L"启动无坐标跳跃");
 
 			pub::Player::SendNNMessage(iClientID, pub::GetNicknameId("nnv_jumpdrive_blind_jump_warning"));
 
@@ -1917,7 +1917,7 @@ namespace HyperJump
 				jd.iTargetSystem = CreateID(systems[rand() % systems.size()].c_str());
 				if (set_banned_systems.find(jd.iTargetSystem) != set_banned_systems.end())
 				{
-					PrintUserCmdText(iClientID, L"ERR: Hyper Drive Malfunction. Recalculating Jump.");
+					PrintUserCmdText(iClientID, L"错误：跳跃引擎故障，重新计算跳跃。");
 					continue;
 				}
 				isBannedSystem = false;
@@ -2013,7 +2013,7 @@ namespace HyperJump
 			{
 				mapSurvey[iClientID].curr_charge = 0;
 				mapSurvey[iClientID].charging_on = false;
-				PrintUserCmdText(iClientID, L"Hyperspace survey disrupted, restart required");
+				PrintUserCmdText(iClientID, L"超空间定位中断，请重启。");
 			}			
 		}
 
@@ -2025,7 +2025,7 @@ namespace HyperJump
 				if (dmg->get_cause() == 6)
 				{				
 				mapJumpDrives[iClientID].charging_on = false;
-				PrintUserCmdText(iClientID, L"Jump drive disrupted. Charging failed.");
+				PrintUserCmdText(iClientID, L"超空间定位中断，充能失败。");
 				//PrintUserCmdText(iClientID, L"Jump drive disruption successful");
 				pub::Player::SendNNMessage(iClientID, pub::GetNicknameId("nnv_jumpdrive_charging_failed"));
 				SetFuse(iClientID, 0);
@@ -2041,13 +2041,13 @@ namespace HyperJump
 		HKPLAYERINFO p;
 		if (HkGetPlayerInfo((const wchar_t*) Players.GetActiveCharacterName(iClientID), p, false)!=HKE_OK || p.iShip==0)
 		{
-			PrintUserCmdText(iClientID, L"ERR Not in space");
+			PrintUserCmdText(iClientID, L"错误：不在太空中");
 			return true;
 		}
 
 		if (mapPlayerBeaconMatrix.find(iClientID) == mapPlayerBeaconMatrix.end())
 		{
-			PrintUserCmdText(iClientID, L"ERR No hyperspace matrix device found.");
+			PrintUserCmdText(iClientID, L"错误：未装备超空间信标矩阵。");
 			return true;
 		}
 
@@ -2057,7 +2057,7 @@ namespace HyperJump
 			{
 				if (i->second.cooldown != 0)
 				{
-					PrintUserCmdText(iClientID, L"Hyperspace generator currently recharging. %d seconds left.", i->second.cooldown);
+					PrintUserCmdText(iClientID, L"超空间发生器正在充能，剩余 %d 秒。", i->second.cooldown);
 					return true;
 				}
 			}
@@ -2069,14 +2069,14 @@ namespace HyperJump
 			{
 				if (item->get_count() < mapPlayerBeaconMatrix[iClientID].itemcount)
 				{
-					PrintUserCmdText(iClientID, L"ERR Not enough batteries to power matrix.");
+					PrintUserCmdText(iClientID, L"错误：电池不足");
 					return true;
 				}
 
 				pub::Player::RemoveCargo(iClientID, item->sID, mapPlayerBeaconMatrix[iClientID].itemcount);
 
 				// Print out a message within the iLocalChatRange when a player engages a JD.
-				wstring wscMsg = L"%time WARNING: A hyperspace beacon has been activated by %player";
+				wstring wscMsg = L"%time 警告：%player 已经激活超空间信标";
 				wscMsg = ReplaceStr(wscMsg, L"%time", GetTimeString(set_bLocalTime));
 				wscMsg = ReplaceStr(wscMsg, L"%player", (const wchar_t*)Players.GetActiveCharacterName(iClientID));
 				PrintLocalUserCmdText(iClientID, wscMsg, set_iLocalChatRange);
@@ -2099,7 +2099,7 @@ namespace HyperJump
 			}
 		}
 
-		PrintUserCmdText(iClientID, L"No hyperspace beacon found.");
+		PrintUserCmdText(iClientID, L"未发现超空间信标。");
 		return true;
 	}
 
@@ -2119,7 +2119,7 @@ namespace HyperJump
 		IObjInspectImpl *obj = HkGetInspect(iClientID);
 		if (!obj)
 		{
-			PrintUserCmdText(iClientID, L"Jump drive charging failed");
+			PrintUserCmdText(iClientID, L"跳跃引擎充能失败");
 			pub::Player::SendNNMessage(iClientID, pub::GetNicknameId("nnv_jumpdrive_charging_failed"));
 			return true;
 		}
@@ -2127,7 +2127,7 @@ namespace HyperJump
 		// If no jumpdrive, report a warning.
 		if (!InitJumpDriveInfo(iClientID))
 		{
-			PrintUserCmdText(iClientID, L"Jump drive not ready");
+			PrintUserCmdText(iClientID, L"未装备跳跃引擎");
 			pub::Player::SendNNMessage(iClientID, pub::GetNicknameId("nnv_jumpdrive_charging_failed"));
 			return true;
 		}
@@ -2143,21 +2143,21 @@ namespace HyperJump
 			IObjInspectImpl *obj = HkGetInspect(iClientIDTarget);
 			if (!obj)
 			{
-				PrintUserCmdText(iClientID, L"ERR Ship not found");
+				PrintUserCmdText(iClientID, L"错误：不是飞船");
 				pub::Player::SendNNMessage(iClientID, pub::GetNicknameId("nnv_jumpdrive_not_ready"));
 				return true;
 			}
 
 			if (mapActiveBeacons.find(iClientIDTarget) == mapActiveBeacons.end())
 			{
-				PrintUserCmdText(iClientID, L"ERR No active beacon found.");
+				PrintUserCmdText(iClientID, L"错误：未发现已激活的超空间信标。");
 				pub::Player::SendNNMessage(iClientID, pub::GetNicknameId("nnv_jumpdrive_not_ready"));
 				return true;
 			}
 
 			if (mapActiveBeacons[iClientIDTarget].decayed == true)
 			{
-				PrintUserCmdText(iClientID, L"ERR No active beacon found.");
+				PrintUserCmdText(iClientID, L"错误：未发现已激活的超空间信标。");
 				pub::Player::SendNNMessage(iClientID, pub::GetNicknameId("nnv_jumpdrive_not_ready"));
 				return true;
 			}
@@ -2165,7 +2165,7 @@ namespace HyperJump
 			// If insufficient charging, report a warning
 			if (!jd.charging_complete)
 			{
-				PrintUserCmdText(iClientID, L"Jump drive not ready");
+				PrintUserCmdText(iClientID, L"跳跃引擎尚未充能完毕，请稍后");
 				pub::Player::SendNNMessage(iClientID, pub::GetNicknameId("nnv_jumpdrive_not_ready"));
 				return true;
 			}
@@ -2213,8 +2213,8 @@ namespace HyperJump
 						{
 							const Universe::ISystem *iSysList = Universe::get_system(jd.iTargetSystem);
 							wstring wscSysNameList = HkGetWStringFromIDS(iSysList->strid_name);
-							PrintUserCmdText(iClientID, L"ERROR: Gravitational rift detected. Cannot jump to %s from this system.", wscSysNameList.c_str());
-							PrintUserCmdText(iClientID, L"Jump drive disabled. Use /jumpsys for the list of available systems.");
+							PrintUserCmdText(iClientID, L"错误：检测到重力裂缝。无法从此星系跳跃至 %s 。", wscSysNameList.c_str());
+							PrintUserCmdText(iClientID, L"跳跃引擎关闭。输入指令/jumpsys可以查看可以跳跃的星系。");
 							jd.charging_complete = false;
 							jd.curr_charge = 0.0;
 							jd.charging_on = false;
@@ -2236,7 +2236,7 @@ namespace HyperJump
 			jd.vTargetPosition.z = pos.z;
 
 			const struct Universe::ISystem *sysinfo = Universe::get_system(jd.iTargetSystem);
-			PrintUserCmdText(iClientID, L"OK Beacon coordinates verified: %s %0.0f.%0.0f.%0.0f",
+			PrintUserCmdText(iClientID, L"信标坐标已确认：%s %0.0f.%0.0f.%0.0f",
 				HkGetWStringFromIDS(sysinfo->strid_name).c_str(),
 				*(float*)&jd.vTargetPosition.x,
 				*(float*)&jd.vTargetPosition.y,
@@ -2253,7 +2253,7 @@ namespace HyperJump
 		}
 		else
 		{
-			PrintUserCmdText(iClientID, L"ERR Name not found");
+			PrintUserCmdText(iClientID, L"错误：未找到名字");
 			pub::Player::SendNNMessage(iClientID, pub::GetNicknameId("nnv_jumpdrive_not_ready"));
 			return true;
 		}
@@ -2268,8 +2268,8 @@ namespace HyperJump
 			if (mapJumpDrives[iTargetID].charging_on == true)
 			{
 				mapJumpDrives[iTargetID].charging_on = false;
-				PrintUserCmdText(iTargetID, L"Jump drive disrupted. Charging failed.");
-				PrintUserCmdText(iClientID, L"Jump drive disruption successful");
+				PrintUserCmdText(iTargetID, L"跳跃引擎中断，充能失败。");
+				PrintUserCmdText(iClientID, L"跳跃引擎干扰成功");
 				pub::Player::SendNNMessage(iTargetID, pub::GetNicknameId("nnv_jumpdrive_charging_failed"));
 				SetFuse(iTargetID, 0);
 				StopChargeFuses(iTargetID);

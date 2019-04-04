@@ -346,7 +346,7 @@ bool PirateCmd(uint iClientID, const wstring &wscCmd, const wstring &wscParam, c
 	pub::Player::GetBase(iClientID, iBaseID);
 	if (!iBaseID)
 	{
-		PrintUserCmdText(iClientID, L"ERR Not in base");
+		PrintUserCmdText(iClientID, L"错误：不在空间站里");
 		return true;
 	}
 
@@ -377,7 +377,7 @@ bool GiftCmd(uint iClientID, const wstring &wscCmd, const wstring &wscParam, con
 	pub::Player::GetBase(iClientID, iBaseID);
 	if (!iBaseID)
 	{
-		PrintUserCmdText(iClientID, L"ERR Not in base");
+		PrintUserCmdText(iClientID, L"错误：不在空间站里");
 		return true;
 	}
 

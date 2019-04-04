@@ -206,7 +206,7 @@ void __stdcall ShipDestroyed(DamageList *_dmg, DWORD *ecx, uint iKill)
 				// If so, clear the carriers map and alert them
 				clientDroneInfo.erase(drone->first);
 
-				PrintUserCmdText(drone->first, L"Your drone has been destroyed.");
+				PrintUserCmdText(drone->first, L"您的无人机已被摧毁。");
 			}
 
 			// If the carrier is being destroyed, destroy the drone as well
@@ -220,7 +220,7 @@ void __stdcall ShipDestroyed(DamageList *_dmg, DWORD *ecx, uint iKill)
 					// Erase any drones in the deployment queue
 					buildTimerMap.erase(drone->first);
 
-					PrintUserCmdText(drone->first, L"Your drone has been destroyed.");
+					PrintUserCmdText(drone->first, L"您的无人机已被摧毁。");
 
 				}
 			}
@@ -236,7 +236,7 @@ void __stdcall SystemSwitchOutComplete(unsigned int iShip, unsigned int iClientI
 	if(clientDroneInfo[iClientID].deployedInfo.deployedDroneObj != 0)
 	{
 		pub::SpaceObj::Destroy(clientDroneInfo[iClientID].deployedInfo.deployedDroneObj, DestroyType::FUSE);
-		PrintUserCmdText(iClientID, L"Drones cannot handle the tear of jumping. Self-destructing.");
+		PrintUserCmdText(iClientID, L"无人机不能跟随跳跃，已经自毁。");
 
 		clientDroneInfo.erase(iClientID);
 	}
@@ -250,7 +250,7 @@ void __stdcall BaseEnter_AFTER(unsigned int iBaseID, unsigned int iClientID)
 	if (clientDroneInfo[iClientID].deployedInfo.deployedDroneObj != 0)
 	{
 		pub::SpaceObj::Destroy(clientDroneInfo[iClientID].deployedInfo.deployedDroneObj, DestroyType::FUSE);
-		PrintUserCmdText(iClientID, L"Drones cannot dock or land on non-carrier structures. Self-destructing.");
+		PrintUserCmdText(iClientID, L"无人机只能停靠航母，已经自毁。");
 
 		clientDroneInfo.erase(iClientID);
 	}
@@ -278,7 +278,7 @@ void __stdcall SetTarget_AFTER(uint client, const XSetTarget& target)
 			if (drone.second.deployedInfo.deployedDroneObj == droneAlertDebounceMap[client].lastDroneObjSelected)
 				return;
 
-			PrintUserCmdText(client, L"Target is a drone owned by %s", reinterpret_cast<const wchar_t*>(Players.GetActiveCharacterName(drone.first)));
+			PrintUserCmdText(client, L"目标无人机的母舰为 %s", reinterpret_cast<const wchar_t*>(Players.GetActiveCharacterName(drone.first)));
 			droneAlertDebounceMap[client].debounceToggle = true;
 			droneAlertDebounceMap[client].lastDroneObjSelected = drone.second.deployedInfo.deployedDroneObj;
 			return;
@@ -328,7 +328,7 @@ void Plugin_Communication_CallBack(PLUGIN_MESSAGE msg, void* data)
 				// If the client is cloaked or is cloaking, do not allow them to deploy a drone
 				if (buildTimerMap.find(info->iClientID) != buildTimerMap.end())
 				{
-					PrintUserCmdText(info->iClientID, L"Deployment will interfere with cloaking devices. Aborting launch");
+					PrintUserCmdText(info->iClientID, L"发射无人机将干扰隐身装置，发射已取消");
 					clientDroneInfo[info->iClientID].buildState = STATE_DRONE_OFF;
 					buildTimerMap.erase(info->iClientID);
 					return;
@@ -356,15 +356,15 @@ struct USERCMD
 
 USERCMD UserCmds[] =
 {
-	{ L"/dronedeploy", UserCommands::UserCmd_Deploy, L"Usage: /deploydrone [DroneType]" },
-	{ L"/dronedeploy*", UserCommands::UserCmd_Deploy , L"Usage: /deplydrone [DroneType]" },
-	{ L"/dronetarget", UserCommands::UserCmd_AttackTarget, L"Usage: Target a vessel and run this command with a drone in space" },
-	{ L"/dronedebug", UserCommands::UserCmd_Debug, L"Usage: Git gud" },
-	{ L"/dronestop", UserCommands::UserCmd_DroneStop, L"Usage: /dronestop -- This causes the drone to stop whatever it's doing and sit still"},
-	{ L"/dronerecall", UserCommands::UserCmd_RecallDrone, L"Usage: /dronerecall"},
-	{ L"/dronehelp", UserCommands::UserCmd_DroneHelp, L"Usage: /dronehelp"},
-	{ L"/dronetypes", UserCommands::UserCmd_DroneBayAvailability, L"Usage: /dronetypes"},
-	{ L"/dronecome", UserCommands::UserCmd_DroneCome, L"Usage: /dronecome"},
+	{ L"/dronedeploy", UserCommands::UserCmd_Deploy, L"使用方法：/deploydrone [无人机类型]" },
+	{ L"/dronedeploy*", UserCommands::UserCmd_Deploy , L"使用方法：/deplydrone [无人机类型]" },
+	{ L"/dronetarget", UserCommands::UserCmd_AttackTarget, L"使用方法：/dronetarget -- 选中一个目标并执行此指令，以指定无人机的攻击目标" },
+	{ L"/dronedebug", UserCommands::UserCmd_Debug, L"使用方法：Git gud" },
+	{ L"/dronestop", UserCommands::UserCmd_DroneStop, L"使用方法：: /dronestop -- 无人机停止攻击并处于静止"},
+	{ L"/dronerecall", UserCommands::UserCmd_RecallDrone, L"使用方法 /dronerecall"},
+	{ L"/dronehelp", UserCommands::UserCmd_DroneHelp, L"使用方法：/dronehelp"},
+	{ L"/dronetypes", UserCommands::UserCmd_DroneBayAvailability, L"使用方法：/dronetypes"},
+	{ L"/dronecome", UserCommands::UserCmd_DroneCome, L"使用方法：/dronecome"},
 };
 
 /**

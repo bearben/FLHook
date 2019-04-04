@@ -82,8 +82,8 @@ namespace PurchaseRestrictions
 	{
 		set_bCheckIDRestrictions = IniGetB(scPluginCfgFile, "PurchaseRestrictions", "CheckIDRestrictions", false);
 		set_bEnforceIDRestrictions = IniGetB(scPluginCfgFile, "PurchaseRestrictions", "EnforceIDRestrictions", false);
-		set_wscShipPurchaseDenied = stows(IniGetS(scPluginCfgFile, "PurchaseRestrictions", "ShipPurchaseDeniedMsg",  "ERR You cannot buy this ship because you do not have the correct ID."));
-		set_wscGoodPurchaseDenied = stows(IniGetS(scPluginCfgFile, "PurchaseRestrictions", "GoodPurchaseDeniedMsg", "ERR You cannot buy this item because you do not have the correct ID."));
+		set_wscShipPurchaseDenied = stows(IniGetS(scPluginCfgFile, "PurchaseRestrictions", "ShipPurchaseDeniedMsg",  "错误：由于ID限制，您不能购买此飞船。"));
+		set_wscGoodPurchaseDenied = stows(IniGetS(scPluginCfgFile, "PurchaseRestrictions", "GoodPurchaseDeniedMsg", "错误：由于ID限制，您不能购买此物品。"));
 
 		INI_Reader ini;
 		if (ini.open(scPluginCfgFile.c_str(), false))
@@ -210,7 +210,7 @@ namespace PurchaseRestrictions
 			{
 				mapInfo[iClientID].bSuppressBuy = true;
 				pub::Player::SendNNMessage(iClientID, pub::GetNicknameId("info_access_denied"));
-				PrintUserCmdText(iClientID, L"ERR Temporarily out of stock");
+				PrintUserCmdText(iClientID, L"错误：暂时没有库存");
 				return true;
 			}
 		}
